@@ -81,16 +81,16 @@ void FeatureMatching(const Mat& img_1,
 	}
 	if(method == 3) // SIFT descriptor
 	{
-		SiftFeatureDetector detector;
-		detector.detect( img_1,keypts1);
-		detector.detect( img_2, keypts2);
+        Ptr<SiftFeatureDetector> detector = SIFT::create();
+		detector->detect( img_1,keypts1);
+		detector->detect( img_2, keypts2);
 
 		//-- Step 2: Calculate descriptors (feature vectors)
-		SiftDescriptorExtractor extractor;
+		Ptr<SiftDescriptorExtractor> extractor = SiftDescriptorExtractor::create();
 
 		
-		extractor.compute( img_1,keypts1, descriptors_1 );
-		extractor.compute( img_2, keypts2, descriptors_2 );
+		extractor->compute( img_1,keypts1, descriptors_1 );
+		extractor->compute( img_2, keypts2, descriptors_2 );
 
 	}
 	if(method == 4) // KAZE descriptor
@@ -114,7 +114,7 @@ void FeatureMatching(const Mat& img_1,
 	}
 
 	//-- Step 3: Matching descriptor vectors using BF matcher
-	BFMatcher matcher(NORM_L2,true);
+	BFMatcher matcher(NORM_L2,true);//不建议构造函数初始化，使用 BFMatcher.create()
 	std::vector< DMatch > matches_;
 	if (matches == NULL) {
 		matches = &matches_;
@@ -132,7 +132,7 @@ void FeatureMatching(const Mat& img_1,
 	std::vector< DMatch > good_matches;
 	vector<KeyPoint> imgpts1_good,imgpts2_good;
 
-	if (min_dist <= 0) {
+	if (min_dist <= 0) {//最小距离还能小于零不成？
 		min_dist = 10.0;
 	}
 

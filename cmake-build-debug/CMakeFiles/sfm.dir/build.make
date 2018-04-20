@@ -34,10 +34,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake
+CMAKE_COMMAND = /home/quinlan/Software/clion-2017.3.4/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake -E remove -f
+RM = /home/quinlan/Software/clion-2017.3.4/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -98,7 +98,6 @@ sfm: /usr/local/lib/libopencv_aruco.so.3.4.0
 sfm: /usr/local/lib/libopencv_bgsegm.so.3.4.0
 sfm: /usr/local/lib/libopencv_bioinspired.so.3.4.0
 sfm: /usr/local/lib/libopencv_ccalib.so.3.4.0
-sfm: /usr/local/lib/libopencv_cvv.so.3.4.0
 sfm: /usr/local/lib/libopencv_dpm.so.3.4.0
 sfm: /usr/local/lib/libopencv_face.so.3.4.0
 sfm: /usr/local/lib/libopencv_freetype.so.3.4.0
@@ -110,6 +109,7 @@ sfm: /usr/local/lib/libopencv_optflow.so.3.4.0
 sfm: /usr/local/lib/libopencv_reg.so.3.4.0
 sfm: /usr/local/lib/libopencv_rgbd.so.3.4.0
 sfm: /usr/local/lib/libopencv_saliency.so.3.4.0
+sfm: /usr/local/lib/libopencv_sfm.so.3.4.0
 sfm: /usr/local/lib/libopencv_stereo.so.3.4.0
 sfm: /usr/local/lib/libopencv_structured_light.so.3.4.0
 sfm: /usr/local/lib/libopencv_surface_matching.so.3.4.0
@@ -123,13 +123,13 @@ sfm: /usr/lib/x86_64-linux-gnu/libGL.so
 sfm: /usr/lib/x86_64-linux-gnu/libglut.so
 sfm: /usr/lib/x86_64-linux-gnu/libXmu.so
 sfm: /usr/lib/x86_64-linux-gnu/libXi.so
-sfm: /usr/local/lib/libopencv_shape.so.3.4.0
 sfm: /usr/local/lib/libopencv_photo.so.3.4.0
 sfm: /usr/local/lib/libopencv_datasets.so.3.4.0
 sfm: /usr/local/lib/libopencv_plot.so.3.4.0
 sfm: /usr/local/lib/libopencv_text.so.3.4.0
 sfm: /usr/local/lib/libopencv_dnn.so.3.4.0
 sfm: /usr/local/lib/libopencv_ml.so.3.4.0
+sfm: /usr/local/lib/libopencv_shape.so.3.4.0
 sfm: /usr/local/lib/libopencv_video.so.3.4.0
 sfm: /usr/local/lib/libopencv_calib3d.so.3.4.0
 sfm: /usr/local/lib/libopencv_features2d.so.3.4.0
