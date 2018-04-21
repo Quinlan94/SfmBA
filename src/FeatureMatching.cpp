@@ -140,10 +140,10 @@ void FeatureMatching(const Mat& img_1,
 	std::set<int> existing_trainIdx;
 	for(unsigned int i = 0; i < matches->size(); i++ )
 	{ 
-		if ((*matches)[i].trainIdx <= 0) {
+		if ((*matches)[i].trainIdx <= 0) {//？？？？会有这种情况？
 			(*matches)[i].trainIdx = (*matches)[i].imgIdx;
 		}
-
+        //如果一个描述符在train中只出现一次，说明它没有其他的重匹配，这段nice,find函数巧妙
 		if( existing_trainIdx.find((*matches)[i].trainIdx) == existing_trainIdx.end() && 
 			(*matches)[i].trainIdx >= 0 && (*matches)[i].trainIdx < (int)(keypts2.size()) &&
 			(*matches)[i].distance > 0.0 && (*matches)[i].distance < cutoff ) 

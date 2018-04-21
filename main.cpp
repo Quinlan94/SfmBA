@@ -140,8 +140,8 @@ int main( int argc, char** argv )
 	//Mat img_2 = imread( argv[2], IMREAD_GRAYSCALE );
 	//string filename1 = "1.JPG";
 	//string filename2 = "2.JPG";
-	Mat img_1 = imread("1.jpg");
-	Mat img_2 = imread("2.jpg");
+	Mat img_1 = imread("1.png");
+	Mat img_2 = imread("2.png");
 	std::vector<KeyPoint> keypoints_1, keypoints_2,keypts1_good,keypts2_good, corr;
 	std::vector< DMatch > matches;
 	width = img_1.cols;
@@ -158,21 +158,27 @@ int main( int argc, char** argv )
 	vector<uchar> status;
 
 
-	vector<KeyPoint> imgpts1_tmp,imgpts1_good,imgpts2_good;
-	vector<KeyPoint> imgpts2_tmp;
+	vector<KeyPoint> imgpts1_tmp,imgpts2_tmp,imgpts1_good,imgpts2_good;
 	GetAlignedPointsFromMatch(keypoints_1, keypoints_2, matches, imgpts1_tmp, imgpts2_tmp);
 	KeyPointsToPoints(imgpts1_tmp, pts1);
 	KeyPointsToPoints(imgpts2_tmp, pts2);
 	double minVal,maxVal;
 	cv::minMaxIdx(pts1,&minVal,&maxVal);
 
-	Mat F = findFundamentalMat(pts1, pts2, FM_RANSAC, 0.006*maxVal, 0.99, status);
-	double status_nz = countNonZero(status); 
+	Mat F = findFundamentalMat(pts1, pts2, FM_RANSAC, 0.006*maxVal, 0.99, status);//maxVal 过滤掉误差较大的匹配点
+	/*
+	 *  status
+    具有N个元素的输出数组，在计算过程中没有被舍弃的点，元素被被置为1；否则置为0。这个数组只可以在方法RANSAC and LMedS 情况下使用；
+    在其它方法的情况下，status一律被置为1。这个参数是可选参数。
+	 * */
+
+	double status_nz = countNonZero(status);
 	double status_sz = status.size();
 	double kept_ratio = status_nz / status_sz;
 
 	vector<DMatch> new_matches;
-	cout << "F keeping " << countNonZero(status) << " / " << status.size() << endl;	
+	cout << "F keeping " << countNonZero(status) << " / " << status.size() << endl;
+	//给大佬递茶
 	for (unsigned int i=0; i<status.size(); i++) {
 		if (status[i]) 
 		{
@@ -202,13 +208,16 @@ int main( int argc, char** argv )
 
 	/////////////////////
 	Mat K,Kinv,discoeff; // Read from calibration file
-
+    K = ( Mat_<double> ( 3,3 ) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1 );
+    discoeff = ( Mat_<double> ( 5,1 ) << 0, 0, 0, 0, 0 );
+    /*
 	string filename = "C:\\OpenCV_Project\\camera_calibration\\result.xml";
 	FileStorage fs(filename, FileStorage::READ);
 	FileNode n = fs.getFirstTopLevelNode();
 	fs["Camera_Matrix"] >> K;
 	fs["Distortion_Coefficients"] >> discoeff;
 	cout << "K " << endl << Mat(K) << endl;
+     */
 	Kinv = K.inv();
 
 	Matx34d P, P1;
@@ -224,7 +233,7 @@ int main( int argc, char** argv )
 	Mat X(img_1.rows,img_1.cols,CV_32FC1);
 	Mat Y(img_1.rows,img_1.cols,CV_32FC1);
 	Mat Z(img_1.rows,img_1.cols,CV_32FC1);
-	string filepath = "C:\\OpenCV_Project\\SFM_Exp\\";
+	string filepath = "./save/";
 	saveXYZimages(img_1,pointcloud,imgpts1_good,filepath,X,Y,Z);
 
 	double Nindex = X.rows * X.cols;
