@@ -3,7 +3,9 @@
  * @brief SURF detector + descriptor + FLANN Matcher
  * @author A. Huaman
  */
-
+#include <pcl/point_types.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/visualization/pcl_visualizer.h>
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
@@ -31,9 +33,7 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <math.h>
-//#include <pcl/point_types.h>
-//#include <pcl/io/pcd_io.h>
-//#include <pcl/visualization/pcl_visualizer.h>
+
 
 
 
@@ -41,8 +41,8 @@ using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;
 
-//typedef pcl::PointXYZRGB pcl_point;
-//typedef pcl::PointCloud<pcl_point> pcl_point_cloud;
+typedef pcl::PointXYZRGB pcl_point;
+typedef pcl::PointCloud<pcl_point> pcl_point_cloud;
 
 void readme();
 //
