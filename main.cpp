@@ -41,8 +41,6 @@ using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;
 
-typedef pcl::PointXYZRGB pcl_point;
-typedef pcl::PointCloud<pcl_point> pcl_point_cloud;
 
 void readme();
 //
@@ -95,9 +93,9 @@ void renderScene(void) {
 
     glPopMatrix();
     //gluLookAt (eyex, eyey, eyez, allx, ally, allz, 0.0, 1.0, 0.0);
-    glRotatef(angle,axis(0),axis(1),axis(2));
-	glPushMatrix();
-    float x,y,z;  
+    glRotatef(angle,axis(0),axis(1),axis(2));//奇怪 每次鼠标必须接在上一个点的位置旋转，才能正常，需要再研究一下
+    glPushMatrix();
+    float x,y,z;
   
     glPointSize(1.0);   
     glBegin(GL_POINTS);
@@ -250,14 +248,25 @@ int main( int argc, char** argv )
 	string filepath = "./save/";
 	//saveXYZimages(img_1,pointcloud,imgpts1_good,filepath,X,Y,Z);
 
-//
-//    for(int i=0;i<pointcloud.size();i++ )
-//    {
-//        pcl_point p;
-//        p.x = pointcloud[i].pt.x;
-//        p.y= pointcloud[i].pt.y;
-//        p.z= pointcloud[i].pt.z;
-//    }
+    typedef pcl::PointXYZ Point_PCL;
+    typedef pcl::PointCloud<Point_PCL> PointCloud;
+
+    PointCloud::Ptr pointCloud( new PointCloud );
+
+
+
+    for(int i=0;i<pointcloud.size();i++ )
+    {
+        Point_PCL p;
+        p.x = pointcloud[i].pt.x;
+        p.y= pointcloud[i].pt.y;
+        p.z= pointcloud[i].pt.z;
+
+        pointCloud->points.push_back( p );
+    }
+    pointCloud->is_dense = false;
+    cout<<"点云共有"<<pointCloud->size()<<"个点."<<endl;
+    pcl::io::savePCDFileBinary("pointCloud.pcd", *pointCloud );
 
 
 
