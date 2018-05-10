@@ -23,6 +23,7 @@
 #include "Triangulation.h"
 #include "Common.h"
 #include "SaveXYZimages.h"
+#include <ArcBall.h>
 
 
 #include <stdlib.h>
@@ -30,6 +31,9 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <math.h>
+//#include <pcl/point_types.h>
+//#include <pcl/io/pcd_io.h>
+//#include <pcl/visualization/pcl_visualizer.h>
 
 
 
@@ -37,11 +41,13 @@ using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;
 
+//typedef pcl::PointXYZRGB pcl_point;
+//typedef pcl::PointCloud<pcl_point> pcl_point_cloud;
 
 void readme();
-
-float imgdata[2448][3264][3];
-float texture[2448][3264][3];
+//
+//float imgdata[2448][3264][3];
+//float texture[2448][3264][3];
 int width=0, height=0, rx = 0, ry = 0;  
 int eyex = 30, eyez = 20, atx = 100, atz = 50; 
 int eyey = -15;
@@ -79,20 +85,22 @@ void special(int key, int x, int y)
 //////////////////////////////////////////////////////////////////////////  
 
 void renderScene(void) {  
-  
+   cout<<"renderScene "<<endl;
     glClear (GL_COLOR_BUFFER_BIT);  
-    glLoadIdentity();// Reset the coordinate system before modifying   
-    gluLookAt (eyex, eyey, eyez, allx, ally, allz, 0.0, 1.0, 0.0);    //  
-    glRotatef(ry, 0.0, 1.0, 0.0); //rotate about the z axis            // 
-	//glRotatef(ry, allx, ally, 0); //rotate about the z axis  
-    //glRotatef(rx-180, 1.0, 0.0, 0.0); //rotate about the y axis  
-	glRotatef(rx, 1.0, 0.0, 0.0); //rotate about the y axis
-	//glRotatef(rx, allx, ally, 0); //rotate about the y axis
-  
+    glLoadIdentity();// 将当前的用户坐标系的原点移到了屏幕中心：类似于一个复位操作
+    gluLookAt (eyex, eyey, eyez, allx, ally, allz, 0.0, 1.0, 0.0);    //  眼睛所在的位置，和所看方向，以及指定朝上方向
+    glRotatef(ry, 0.0, 1.0, 0.0);           //
+
+	glRotatef(rx, 1.0, 0.0, 0.0);
+
+    glPopMatrix();
+    //gluLookAt (eyex, eyey, eyez, allx, ally, allz, 0.0, 1.0, 0.0);
+    glRotatef(angle,axis(0),axis(1),axis(2));
+	glPushMatrix();
     float x,y,z;  
   
     glPointSize(1.0);   
-    glBegin(GL_POINTS);//GL_POINTS 
+    glBegin(GL_POINTS);
 	for(int i=0;i<pointcloud.size();i++)
 	{
 		glColor3f(255,255,255);
@@ -118,11 +126,12 @@ void renderScene(void) {
   
 //////////////////////////////////////////////////////////////////////////  
 
-void reshape (int w, int h) {  
+void reshape (int w, int h) {
+    cout<<"reshape "<<endl;
     glViewport (0, 0, (GLsizei)w, (GLsizei)h);  
-    glMatrixMode (GL_PROJECTION);  
-    glLoadIdentity ();  
-    gluPerspective (60, (GLfloat)w / (GLfloat)h, 1.0, 5000.0);    // 
+    glMatrixMode (GL_PROJECTION);  //表明接下来要做透视投影操作
+    glLoadIdentity ();  //然后把矩阵设为单位矩阵：
+    gluPerspective (60, (GLfloat)w / (GLfloat)h, 1.0, 5000.0);// 它们生成的矩阵会与当前的矩阵相乘,生成透视的效果
     glMatrixMode (GL_MODELVIEW);  
 }  
 
@@ -133,17 +142,11 @@ void reshape (int w, int h) {
 ////Function Main
 int main( int argc, char** argv )
 {
- // if( argc != 3 )
- //{ readme(); return -1; }
 
-	//Mat img_1 = imread( argv[1], IMREAD_GRAYSCALE );
-	//Mat img_2 = imread( argv[2], IMREAD_GRAYSCALE );
-	//string filename1 = "1.JPG";
-	//string filename2 = "2.JPG";
-	Mat img_1 = imread("1.png");
-	Mat img_2 = imread("2.png");
+	Mat img_1 = imread("../1.png");
+	Mat img_2 = imread("../2.png");
+    std::vector< DMatch > matches;
 	std::vector<KeyPoint> keypoints_1, keypoints_2,keypts1_good,keypts2_good, corr;
-	std::vector< DMatch > matches;
 	width = img_1.cols;
 	height = img_1.rows;
 
@@ -210,6 +213,17 @@ int main( int argc, char** argv )
 	Mat K,Kinv,discoeff; // Read from calibration file
     K = ( Mat_<double> ( 3,3 ) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1 );
     discoeff = ( Mat_<double> ( 5,1 ) << 0, 0, 0, 0, 0 );
+    Point2d principal_point(325.1,249.7);
+    int focal_length = 521;
+    Mat essential_matrix;
+    essential_matrix = findEssentialMat(pts1,pts2,focal_length,principal_point,RANSAC);
+    cout << "E: "<<essential_matrix<<endl;
+
+    Mat R_cv,t_cv;
+    recoverPose(essential_matrix,pts1,pts2,R_cv,t_cv,focal_length,principal_point);
+    cout <<"R: "<<R_cv<<endl;
+    cout <<"t: "<<t_cv<<endl;
+
     /*
 	string filename = "C:\\OpenCV_Project\\camera_calibration\\result.xml";
 	FileStorage fs(filename, FileStorage::READ);
@@ -224,7 +238,7 @@ int main( int argc, char** argv )
 	
 	
 
-	bool CM = FindCameraMatrices(K,Kinv,F,P,P1,discoeff,imgpts1_tmp,imgpts2_tmp,imgpts1_good,imgpts2_good,matches,pointcloud);
+	bool CM = FindCameraMatrices(K,Kinv,F,P,P1,R_cv,t_cv,discoeff,imgpts1_tmp,imgpts2_tmp,imgpts1_good,imgpts2_good,matches,pointcloud);
 	
 	// Reconstruct 3D
 	//double mse = TriangulatePoints(keypts1_good,keypts2_good,K,Kinv,P,P1,pointcloud,keypts1_good,discoeff);
@@ -234,7 +248,18 @@ int main( int argc, char** argv )
 	Mat Y(img_1.rows,img_1.cols,CV_32FC1);
 	Mat Z(img_1.rows,img_1.cols,CV_32FC1);
 	string filepath = "./save/";
-	saveXYZimages(img_1,pointcloud,imgpts1_good,filepath,X,Y,Z);
+	//saveXYZimages(img_1,pointcloud,imgpts1_good,filepath,X,Y,Z);
+
+//
+//    for(int i=0;i<pointcloud.size();i++ )
+//    {
+//        pcl_point p;
+//        p.x = pointcloud[i].pt.x;
+//        p.y= pointcloud[i].pt.y;
+//        p.z= pointcloud[i].pt.z;
+//    }
+
+
 
 	double Nindex = X.rows * X.cols;
 
@@ -245,7 +270,7 @@ int main( int argc, char** argv )
 		ally += pointcloud[i].pt.y;
 		allz += pointcloud[i].pt.z;
 	}
-	allx = 1.0 * allx/(float)pointcloud.size();
+	allx = 1.0 * allx/(float)pointcloud.size();//相机所看向的位置，点太多，全面考虑所有点
 	ally = 1.0 * ally/(float)pointcloud.size();
 	allz = 1.0 * allz/(float)pointcloud.size();
 
@@ -293,11 +318,13 @@ int main( int argc, char** argv )
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
-	glutInitWindowSize(1024,768);
+	glutInitWindowSize(WIDTH,HEIGHT);
 	glutCreateWindow("3D Reconstruct Model");
-	glutReshapeFunc (reshape);            // ���ڱ仯ʱ�ع�ͼ��  
-	glutDisplayFunc(renderScene);        // ��ʾ��άͼ��  
-	glutSpecialFunc(special);                // ��Ӧ�����������Ϣ  
+	glutReshapeFunc (reshape);//自适应屏幕窗口大小的改变，图形比例不改变
+	glutDisplayFunc(renderScene);//这个函数告诉 GLUT 当窗口内容必须被绘制时,那个函数将被调用
+	glutSpecialFunc(special);
+    glutMouseFunc(mousePressEvent);
+    glutMotionFunc(mouseMoveEvent);
 	glutPostRedisplay();    
 	glutMainLoop();  
 

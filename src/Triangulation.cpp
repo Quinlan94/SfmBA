@@ -9,6 +9,14 @@ using namespace cv;
 
 #undef __SFM__DEBUG__
 
+Point2f pixel2cam ( const Point2d& p, const Mat& K )
+{
+    return Point2f
+            (
+                    ( p.x - K.at<double>(0,2) ) / K.at<double>(0,0),
+                    ( p.y - K.at<double>(1,2) ) / K.at<double>(1,1)
+            );
+}
 
 /**
  From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
@@ -41,7 +49,7 @@ Mat_<double> LinearLSTriangulation(Point3d u,		//homogenous image point (u,v,1)
 			  u1.x*P1(2,0)-P1(0,0), u1.x*P1(2,1)-P1(0,1),	u1.x*P1(2,2)-P1(0,2),	
 			  u1.y*P1(2,0)-P1(1,0), u1.y*P1(2,1)-P1(1,1),	u1.y*P1(2,2)-P1(1,2)
 			  );
-	Matx41d B(-(u.x*P(2,3)	-P(0,3)),
+	Matx41d B(-(u.x*P(2,3)	-P(0,3)),//这段什么意思
 			  -(u.y*P(2,3)	-P(1,3)),
 			  -(u1.x*P1(2,3)	-P1(0,3)),
 			  -(u1.y*P1(2,3)	-P1(1,3)));
@@ -96,6 +104,27 @@ Mat_<double> IterativeLinearLSTriangulation(Point3d u,	//homogenous image point 
 	return X;
 }
 
+
+
+Eigen::Vector3d TriangulatePointDLT(const Eigen::Matrix3x4d& proj_matrix1,
+                                    const Eigen::Matrix3x4d& proj_matrix2,
+                                    const Eigen::Vector2d& point1,
+                                    const Eigen::Vector2d& point2)
+{
+    Eigen::Matrix4d A;
+
+    A.row(0) = point1(0) * proj_matrix1.row(2) - proj_matrix1.row(0);
+    A.row(1) = point1(1) * proj_matrix1.row(2) - proj_matrix1.row(1);
+    A.row(2) = point2(0) * proj_matrix2.row(2) - proj_matrix2.row(0);
+    A.row(3) = point2(1) * proj_matrix2.row(2) - proj_matrix2.row(1);
+
+    Eigen::JacobiSVD<Eigen::Matrix4d> svd(A, Eigen::ComputeFullV);
+
+    return svd.matrixV().col(3).hnormalized();
+}
+
+
+
 //Triagulate points
 double TriangulatePoints(const vector<KeyPoint>& pt_set1, 
 						const vector<KeyPoint>& pt_set2, 
@@ -119,19 +148,54 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 				P1(2,0),P1(2,1),P1(2,2),P1(2,3),
 				0,		0,		0,		1);
 	Matx44d P1inv(P1_.inv());
-	
-	cout << "Triangulating Now . . .";
+
+    Eigen::Matrix3x4d P_matrix,P1_matrix;
+	P_matrix<<P(0,0),P(0,1),P(0,2),P(0,3),
+			P(1,0),P(1,1),P(1,2),P(1,3),
+			P(2,0),P(2,1),P(2,2),P(2,3);
+
+    P1_matrix<<P1(0,0),P1(0,1),P1(0,2),P1(0,3),
+			P1(1,0),P1(1,1),P1(1,2),P1(1,3),
+			P1(2,0),P1(2,1),P1(2,2),P1(2,3);
+
+	Mat T1 = (Mat_<double>(3,4)<<1,0,0,0,
+	                             0,1,0,0,
+	                             0,0,1,0);
+	cout<< "T1: "<<T1<<endl;
+	Mat T2 = (Mat_<double>(3,4)<<P1(0,0),P1(0,1),P1(0,2),P1(0,3),
+			                     P1(1,0),P1(1,1),P1(1,2),P1(1,3),
+			                     P1(2,0),P1(2,1),P1(2,2),P1(2,3));
+
+	Mat R = (Mat_<double>(3,3)<<P1(0,0),P1(0,1),P1(0,2),
+			                    P1(1,0),P1(1,1),P1(1,2),
+			                    P1(2,0),P1(2,1),P1(2,2));
+
+	Mat t0 = (Mat_<double>(3,1)<<P1(0,3),P1(1,3),P1(2,3));
+
+
+	cout<< "T2: "<<T2<<endl;
+
+
+
+
+	cout << "Triangulating Now . . ."<<endl;
 	double t = getTickCount();
 	vector<double> reproj_error;
 	unsigned int pts_size = pt_set1.size();
 	
-#if 0
+#if 1
 	//Using OpenCV's triangulation
 	//convert to Point2f
 	vector<Point2f> _pt_set1_pt,_pt_set2_pt;
-	KeyPointsToPoints(pt_set1,_pt_set1_pt);
-	KeyPointsToPoints(pt_set2,_pt_set2_pt);
-	
+//	KeyPointsToPoints(pt_set1,_pt_set1_pt);
+//	KeyPointsToPoints(pt_set2,_pt_set2_pt);
+
+    for (int j=0; j<pt_set1.size(); j++)
+    {
+        _pt_set1_pt.push_back(pixel2cam(pt_set1[j].pt,K));
+        _pt_set2_pt.push_back(pixel2cam(pt_set2[j].pt,K));
+    }
+/*
 	//undistort
 	Mat pt_set1_pt,pt_set2_pt;
 	undistortPoints(_pt_set1_pt, pt_set1_pt, K, distcoeff);
@@ -141,23 +205,60 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 	Mat pt_set1_pt_2r = pt_set1_pt.reshape(1, 2);
 	Mat pt_set2_pt_2r = pt_set2_pt.reshape(1, 2);
 	Mat pt_3d_h(1,pts_size,CV_32FC4);
-	cv::triangulatePoints(P,P1,pt_set1_pt_2r,pt_set2_pt_2r,pt_3d_h);
+ */
+    Mat pts_4d;
+    vector<Point3f> points_3d;
+	cv::triangulatePoints(P,P1,_pt_set1_pt,_pt_set2_pt,pts_4d);
+    for ( int i=0; i<pts_4d.cols; i++ )
+    {
+        Mat x = pts_4d.col(i);
+        x /= x.at<float>(3,0); // 归一化
+        Point3d p (
+                x.at<float>(0,0),
+                x.at<float>(1,0),
+                x.at<float>(2,0)
+        );
+        points_3d.push_back( p );
+    }
 
 	//calculate reprojection
-	vector<Point3f> pt_3d;
-	convertPointsHomogeneous(pt_3d_h.reshape(4, 1), pt_3d);
-	cv::Mat_<double> R = (cv::Mat_<double>(3,3) << P(0,0),P(0,1),P(0,2), P(1,0),P(1,1),P(1,2), P(2,0),P(2,1),P(2,2));
-	Vec3d rvec; Rodrigues(R ,rvec);
-	Vec3d tvec(P(0,3),P(1,3),P(2,3));
-	vector<Point2f> reprojected_pt_set1;
-	projectPoints(pt_3d,rvec,tvec,K,distcoeff,reprojected_pt_set1);
+//	vector<Point3f> pt_3d;
+//	convertPointsHomogeneous(pt_3d_h.reshape(4, 1), pt_3d);
+    Mat_<double> KP1 = K * Mat(P1);
+    Mat_<double> X = Mat_<double>(4,1);
+    for (int i=0; i<points_3d.size(); i++)
+    {
+        X << points_3d[i].x,points_3d[i].y,points_3d[i].z,1;
+        Mat_<double> xPt_img = KP1 * X;
+        Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
 
-	for (unsigned int i=0; i<pts_size; i++) {
-		CloudPoint cp; 
-		cp.pt = pt_3d[i];
-		pointcloud.push_back(cp);
-		reproj_error.push_back(norm(_pt_set1_pt[i]-reprojected_pt_set1[i]));
-	}
+        double reprj_err = norm(xPt_img_ - pt_set2[i].pt);
+        reproj_error.push_back(reprj_err);
+
+        CloudPoint cp;
+        cp.pt = Point3d(X(0), X(1), X(2));
+        cp.reprojection_error = reprj_err;
+
+        pointcloud.push_back(cp);
+        correspImg1Pt.push_back(pt_set1[i]);
+
+        depths.push_back(X(2));
+    }
+
+
+//	cv::Mat_<double> R = (cv::Mat_<double>(3,3) << P(0,0),P(0,1),P(0,2), P(1,0),P(1,1),P(1,2), P(2,0),P(2,1),P(2,2));
+//	Vec3d rvec;
+//    Rodrigues(R ,rvec);
+//	Vec3d tvec(P(0,3),P(1,3),P(2,3));
+//	vector<Point2f> reprojected_pt_set1;
+//	projectPoints(pt_3d,rvec,tvec,K,distcoeff,reprojected_pt_set1);
+//
+//	for (unsigned int i=0; i<pts_size; i++) {
+//		CloudPoint cp;
+//		cp.pt = pt_3d[i];
+//		pointcloud.push_back(cp);
+//		reproj_error.push_back(norm(_pt_set1_pt[i]-reprojected_pt_set1[i]));
+//	}
 #else
 	Mat_<double> KP1 = K * Mat(P1);
 #pragma omp parallel for num_threads(1)
@@ -172,8 +273,45 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 		Point3d u1(kp1.x,kp1.y,1.0);
 		Mat_<double> um1 = Kinv * Mat_<double>(u1); 
 		u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
-		
+
+		Eigen::Vector2d u_dlt,u1_dlt ;
+		u_dlt<< um(0), um(1);
+		u1_dlt<<  um1(0), um1(1);
+		Mat pts_4d;
+
+
+
 		Mat_<double> X = IterativeLinearLSTriangulation(u,P,u1,P1);
+
+        Eigen::Vector3d X_test,X_cv;
+        X_test << X(0),X(1),X(2);
+
+
+		Eigen::Vector3d X_dlt = TriangulatePointDLT(P_matrix,P1_matrix,u_dlt,u1_dlt);
+
+		vector<Point2d> pt1,pt2;
+		Point2d pt_1,pt_2;
+		pt_1.x=um(0);
+		pt_1.y=um(1);
+		pt1.push_back(pt_1);
+		pt_2.x=um1(0);
+		pt_2.y=um1(1);
+        pt2.push_back(pt_2);
+
+		cv::triangulatePoints(T1,T2,pt1,pt2,pts_4d);
+		Mat x = pts_4d.col(0);
+		cout<<"X_origin: "<<X_test<<endl;
+		cout<<"X_dlt: "<<X_dlt<<endl;
+
+		x /= x.at<double>(3,0);
+		cout<<"x_cv: "<<x<<endl;
+		Point3d p (x.at<double>(0,0),
+				   x.at<double>(1,0),
+		           x.at<double>(2,0));
+		Mat pt2_trans = R * (Mat_<double>(3,1)<<p.x,p.y,p.z)+t0;
+		pt2_trans /= pt2_trans.at<double>(2,0);
+		cout <<"pt2_trans: "<< pt2_trans<<endl;
+
 		
 //		cout << "3D Point: " << X << endl;
 //		Mat_<double> x = Mat(P1) * X;
@@ -217,9 +355,9 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 			circle(tmp, correspImg1Pt[i].pt, 1, Scalar(255 * (1.0-(_d)),255,255), CV_FILLED);
 		}
 		cvtColor(tmp, tmp, CV_HSV2BGR);
-		imshow("Depth Map", tmp);
-		waitKey(0);
-		destroyWindow("Depth Map");
+//		imshow("Depth Map", tmp);
+//		waitKey(0);
+//		destroyWindow("Depth Map");
 	}	
 
 	

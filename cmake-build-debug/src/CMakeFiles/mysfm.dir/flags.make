@@ -6,5 +6,5 @@ CXX_FLAGS = -std=c++11 -g -fPIC
 
 CXX_DEFINES = -Dmysfm_EXPORTS
 
-CXX_INCLUDES = -I/usr/local/include -I/usr/local/include/opencv -I/home/quinlan/Learn/SfmBA/include 
+CXX_INCLUDES = -I/usr/local/include -I/usr/local/include/opencv -I/home/quinlan/Learn/SfmBA/include -I/usr/include/eigen3 
 

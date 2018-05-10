@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include <Eigen/Core>
+#include <Eigen/Dense>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -13,6 +16,12 @@
 #include "Common.h"
 using namespace std;
 using namespace cv;
+
+
+namespace Eigen {
+
+    typedef Eigen::Matrix<double, 3, 4> Matrix3x4d;
+}
 
 /**
  From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
@@ -42,3 +51,13 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 						vector<KeyPoint>& correspImg1Pt,
 						const Mat& distcoeff);
 bool TestTriangulation(const vector<CloudPoint>& pcloud, const Matx34d& P, vector<uchar>& status);
+
+
+Eigen::Vector3d TriangulatePointDLT(const Eigen::Matrix3x4d& proj_matrix1,
+                                 const Eigen::Matrix3x4d& proj_matrix2,
+                                 const Eigen::Vector2d& point1,
+                                 const Eigen::Vector2d& point2);
+
+
+
+
