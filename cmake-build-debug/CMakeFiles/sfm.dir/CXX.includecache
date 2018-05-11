@@ -141,6 +141,8 @@ SaveXYZimages.h
 /home/quinlan/Learn/SfmBA/SaveXYZimages.h
 ArcBall.h
 -
+string
+-
 stdlib.h
 -
 GL/glut.h

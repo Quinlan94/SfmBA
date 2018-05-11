@@ -34,10 +34,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/quinlan/Software/clion-2017.3.4/bin/cmake/bin/cmake
+CMAKE_COMMAND = /home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake
 
 # The command to remove a file.
-RM = /home/quinlan/Software/clion-2017.3.4/bin/cmake/bin/cmake -E remove -f
+RM = /home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -98,6 +98,7 @@ sfm: /usr/local/lib/libopencv_aruco.so.3.4.0
 sfm: /usr/local/lib/libopencv_bgsegm.so.3.4.0
 sfm: /usr/local/lib/libopencv_bioinspired.so.3.4.0
 sfm: /usr/local/lib/libopencv_ccalib.so.3.4.0
+sfm: /usr/local/lib/libopencv_cvv.so.3.4.0
 sfm: /usr/local/lib/libopencv_dpm.so.3.4.0
 sfm: /usr/local/lib/libopencv_face.so.3.4.0
 sfm: /usr/local/lib/libopencv_freetype.so.3.4.0
@@ -109,7 +110,6 @@ sfm: /usr/local/lib/libopencv_optflow.so.3.4.0
 sfm: /usr/local/lib/libopencv_reg.so.3.4.0
 sfm: /usr/local/lib/libopencv_rgbd.so.3.4.0
 sfm: /usr/local/lib/libopencv_saliency.so.3.4.0
-sfm: /usr/local/lib/libopencv_sfm.so.3.4.0
 sfm: /usr/local/lib/libopencv_stereo.so.3.4.0
 sfm: /usr/local/lib/libopencv_structured_light.so.3.4.0
 sfm: /usr/local/lib/libopencv_surface_matching.so.3.4.0
@@ -135,7 +135,6 @@ sfm: /usr/lib/x86_64-linux-gnu/libboost_regex.so
 sfm: /usr/lib/x86_64-linux-gnu/libpcl_common.so
 sfm: /usr/lib/x86_64-linux-gnu/libpcl_octree.so
 sfm: /usr/lib/libOpenNI.so
-sfm: /usr/lib/libOpenNI2.so
 sfm: /usr/lib/x86_64-linux-gnu/libz.so
 sfm: /usr/lib/x86_64-linux-gnu/libjpeg.so
 sfm: /usr/lib/x86_64-linux-gnu/libpng.so
@@ -169,7 +168,6 @@ sfm: /usr/lib/x86_64-linux-gnu/libboost_chrono.so
 sfm: /usr/lib/x86_64-linux-gnu/libboost_atomic.so
 sfm: /usr/lib/x86_64-linux-gnu/libboost_regex.so
 sfm: /usr/lib/libOpenNI.so
-sfm: /usr/lib/libOpenNI2.so
 sfm: /usr/lib/x86_64-linux-gnu/libvtkImagingStencil-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libz.so
 sfm: /usr/lib/x86_64-linux-gnu/libjpeg.so
@@ -195,7 +193,6 @@ sfm: /usr/lib/x86_64-linux-gnu/libtheoraenc.so
 sfm: /usr/lib/x86_64-linux-gnu/libtheoradec.so
 sfm: /usr/lib/x86_64-linux-gnu/libogg.so
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOMINC-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingLOD-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingImage-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libxml2.so
 sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersReebGraph-6.2.so.6.2.0
@@ -209,7 +206,6 @@ sfm: /usr/lib/x86_64-linux-gnu/libvtkGUISupportQtOpenGL-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOParallelLSDyna-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersParallelGeometry-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkGUISupportQtWebkit-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkIOPLY-6.2.so.6.2.0
 sfm: /usr/lib/libvtkWrappingTools-6.2.a
 sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersHyperTree-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingVolumeOpenGL-6.2.so.6.2.0
@@ -227,7 +223,6 @@ sfm: /usr/lib/x86_64-linux-gnu/libvtkIOParallelExodus-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersGeneric-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOVideo-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingQt-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersTexture-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOInfovis-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkGUISupportQtSQL-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingFreeTypeOpenGL-6.2.so.6.2.0
@@ -242,7 +237,6 @@ sfm: /usr/lib/x86_64-linux-gnu/libvtkIOEnSight-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOMySQL-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingMatplotlib-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkDomainsChemistry-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkIOExport-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersParallelMPI-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOParallelXML-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkTestingRendering-6.2.so.6.2.0
@@ -259,19 +253,24 @@ sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingFreeTypeFontConfig-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOFFMPEG-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOMPIImage-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOGDAL-6.2.so.6.2.0
+sfm: /usr/local/lib/libopencv_shape.so.3.4.0
 sfm: /usr/local/lib/libopencv_photo.so.3.4.0
 sfm: /usr/local/lib/libopencv_datasets.so.3.4.0
 sfm: /usr/local/lib/libopencv_plot.so.3.4.0
 sfm: /usr/local/lib/libopencv_text.so.3.4.0
 sfm: /usr/local/lib/libopencv_dnn.so.3.4.0
 sfm: /usr/local/lib/libopencv_ml.so.3.4.0
-sfm: /usr/local/lib/libopencv_shape.so.3.4.0
 sfm: /usr/local/lib/libopencv_video.so.3.4.0
 sfm: /usr/local/lib/libopencv_calib3d.so.3.4.0
 sfm: /usr/local/lib/libopencv_features2d.so.3.4.0
 sfm: /usr/local/lib/libopencv_highgui.so.3.4.0
 sfm: /usr/local/lib/libopencv_videoio.so.3.4.0
 sfm: /usr/local/lib/libopencv_viz.so.3.4.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingLOD-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkIOPLY-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkIOExport-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingGL2PS-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingContextOpenGL-6.2.so.6.2.0
 sfm: /usr/local/lib/libopencv_phase_unwrapping.so.3.4.0
 sfm: /usr/local/lib/libopencv_flann.so.3.4.0
 sfm: /usr/local/lib/libopencv_imgcodecs.so.3.4.0
@@ -304,6 +303,7 @@ sfm: /usr/lib/x86_64-linux-gnu/libvtkexoIIc-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libnetcdf_c++.so
 sfm: /usr/lib/x86_64-linux-gnu/libnetcdf.so
 sfm: /usr/lib/x86_64-linux-gnu/libvtkGUISupportQt-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersTexture-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.5.1
 sfm: /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.5.1
 sfm: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.5.1
@@ -316,19 +316,17 @@ sfm: /usr/lib/x86_64-linux-gnu/libvtkViewsCore-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkInteractionWidgets-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersHybrid-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkInteractionStyle-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingAnnotation-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkImagingColor-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingVolume-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkFiltersImaging-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkChartsCore-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkInfovisCore-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingContext2D-6.2.so.6.2.0
+sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingLabel-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOSQL-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkWrappingPython27Core-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkPythonInterpreter-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingAnnotation-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkImagingColor-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingLabel-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingGL2PS-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingContextOpenGL-6.2.so.6.2.0
-sfm: /usr/lib/x86_64-linux-gnu/libvtkRenderingContext2D-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOXML-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOXMLParser-6.2.so.6.2.0
 sfm: /usr/lib/x86_64-linux-gnu/libvtkIOGeometry-6.2.so.6.2.0

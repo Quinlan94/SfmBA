@@ -31,7 +31,7 @@
 #include "SaveXYZimages.h"
 #include <ArcBall.h>
 
-
+#include <string>
 #include <stdlib.h>
 
 #include <GL/glut.h>
@@ -60,7 +60,7 @@ float allz = 0.0;
 vector<Mat> images;
 
 
-
+/*
 void special(int key, int x, int y)  
 {  
     switch(key)  
@@ -121,7 +121,7 @@ void renderScene(void) {
             glVertex3f(x,y,z);   
         }  
     }  
-	*/
+
     glEnd();  
     glFlush();  
 }  
@@ -135,9 +135,8 @@ void reshape (int w, int h) {
     glLoadIdentity ();  //然后把矩阵设为单位矩阵：
     gluPerspective (60, (GLfloat)w / (GLfloat)h, 1.0, 5000.0);// 它们生成的矩阵会与当前的矩阵相乘,生成透视的效果
     glMatrixMode (GL_MODELVIEW);  
-}  
-
-
+}
+*/
 
 
 
@@ -150,15 +149,26 @@ int main( int argc, char** argv )
         cout<< " 该目录不存在！！！ " << std::endl;
         return -1;
     }
-    boost::filesystem::path::iterator image_file = images_dir.begin();
-    while(image_file != images_dir.end())
+	vector<Mat> images;
+    vector<string> paths;
+	boost::filesystem::directory_iterator  iters(images_dir);
+    boost::filesystem::directory_iterator  end;
+    while(iters != end)
     {
-        //Mat img = imread( *(image_file));
-        cout<< *image_file<<endl;
-        //images.push_back(img);
-        image_file++;
+		boost::filesystem::path p = *iters;
+
+        cout<< path(*iters).string()<<endl;
+        paths.push_back(path(*iters).string());
+
+        iters++;
 
     }
+    std::sort(paths.begin(),paths.end(),std::less<string>());
+    for (int i = 0; i<paths.size();i++)
+	{
+		Mat img = imread(paths[i]);
+		images.push_back(img);
+	}
 
 
 
@@ -335,7 +345,7 @@ int main( int argc, char** argv )
 	*/
 
 	//////// OpenGL Draw
-
+   /*
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
@@ -348,7 +358,7 @@ int main( int argc, char** argv )
     glutMotionFunc(mouseMoveEvent);
 	glutPostRedisplay();    
 	glutMainLoop();  
-
+*/
 	//cvWaitKey(0);
 
 	return 0;

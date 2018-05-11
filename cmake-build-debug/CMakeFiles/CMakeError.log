@@ -1,22 +1,22 @@
 Determining if the pthread_create exist failed with the following output:
 Change Dir: /home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_e4e48/fast"
-/usr/bin/make -f CMakeFiles/cmTC_e4e48.dir/build.make CMakeFiles/cmTC_e4e48.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_0727d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0727d.dir/build.make CMakeFiles/cmTC_0727d.dir/build
 make[1]: Entering directory '/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_e4e48.dir/CheckSymbolExists.c.o
-/usr/bin/cc    -o CMakeFiles/cmTC_e4e48.dir/CheckSymbolExists.c.o   -c /home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c
-Linking C executable cmTC_e4e48
-/home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e4e48.dir/link.txt --verbose=1
-/usr/bin/cc      -rdynamic CMakeFiles/cmTC_e4e48.dir/CheckSymbolExists.c.o  -o cmTC_e4e48 
-CMakeFiles/cmTC_e4e48.dir/CheckSymbolExists.c.o：在函数‘main’中：
+Building C object CMakeFiles/cmTC_0727d.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_0727d.dir/CheckSymbolExists.c.o   -c /home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_0727d
+/home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0727d.dir/link.txt --verbose=1
+/usr/bin/cc      -rdynamic CMakeFiles/cmTC_0727d.dir/CheckSymbolExists.c.o  -o cmTC_0727d 
+CMakeFiles/cmTC_0727d.dir/CheckSymbolExists.c.o：在函数‘main’中：
 CheckSymbolExists.c:(.text+0x16)：对‘pthread_create’未定义的引用
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_e4e48.dir/build.make:97: recipe for target 'cmTC_e4e48' failed
-make[1]: *** [cmTC_e4e48] Error 1
+CMakeFiles/cmTC_0727d.dir/build.make:97: recipe for target 'cmTC_0727d' failed
+make[1]: *** [cmTC_0727d] Error 1
 make[1]: Leaving directory '/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_e4e48/fast' failed
-make: *** [cmTC_e4e48/fast] Error 2
+Makefile:126: recipe for target 'cmTC_0727d/fast' failed
+make: *** [cmTC_0727d/fast] Error 2
 
 File /home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
 /* */
@@ -36,20 +36,20 @@ int main(int argc, char** argv)
 Determining if the function pthread_create exists in the pthreads failed with the following output:
 Change Dir: /home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_3c28c/fast"
-/usr/bin/make -f CMakeFiles/cmTC_3c28c.dir/build.make CMakeFiles/cmTC_3c28c.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_7d901/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7d901.dir/build.make CMakeFiles/cmTC_7d901.dir/build
 make[1]: Entering directory '/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_3c28c.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_3c28c.dir/CheckFunctionExists.c.o   -c /home/quinlan/software/clion-2017.3.4/bin/cmake/share/cmake-3.9/Modules/CheckFunctionExists.c
-Linking C executable cmTC_3c28c
-/home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3c28c.dir/link.txt --verbose=1
-/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_3c28c.dir/CheckFunctionExists.c.o  -o cmTC_3c28c -lpthreads 
+Building C object CMakeFiles/cmTC_7d901.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_7d901.dir/CheckFunctionExists.c.o   -c /home/quinlan/software/clion-2017.3.4/bin/cmake/share/cmake-3.9/Modules/CheckFunctionExists.c
+Linking C executable cmTC_7d901
+/home/quinlan/software/clion-2017.3.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7d901.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_7d901.dir/CheckFunctionExists.c.o  -o cmTC_7d901 -lpthreads 
 /usr/bin/ld: 找不到 -lpthreads
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_3c28c.dir/build.make:97: recipe for target 'cmTC_3c28c' failed
-make[1]: *** [cmTC_3c28c] Error 1
+CMakeFiles/cmTC_7d901.dir/build.make:97: recipe for target 'cmTC_7d901' failed
+make[1]: *** [cmTC_7d901] Error 1
 make[1]: Leaving directory '/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_3c28c/fast' failed
-make: *** [cmTC_3c28c/fast] Error 2
+Makefile:126: recipe for target 'cmTC_7d901/fast' failed
+make: *** [cmTC_7d901/fast] Error 2
 
 
