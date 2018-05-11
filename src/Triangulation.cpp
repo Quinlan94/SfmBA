@@ -184,28 +184,16 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 	unsigned int pts_size = pt_set1.size();
 	
 #if 1
-	//Using OpenCV's triangulation
-	//convert to Point2f
+
 	vector<Point2f> _pt_set1_pt,_pt_set2_pt;
-//	KeyPointsToPoints(pt_set1,_pt_set1_pt);
-//	KeyPointsToPoints(pt_set2,_pt_set2_pt);
 
     for (int j=0; j<pt_set1.size(); j++)
     {
+		//要转化为相机的归一化坐标
         _pt_set1_pt.push_back(pixel2cam(pt_set1[j].pt,K));
         _pt_set2_pt.push_back(pixel2cam(pt_set2[j].pt,K));
     }
-/*
-	//undistort
-	Mat pt_set1_pt,pt_set2_pt;
-	undistortPoints(_pt_set1_pt, pt_set1_pt, K, distcoeff);
-	undistortPoints(_pt_set2_pt, pt_set2_pt, K, distcoeff);
-	
-	//triangulate
-	Mat pt_set1_pt_2r = pt_set1_pt.reshape(1, 2);
-	Mat pt_set2_pt_2r = pt_set2_pt.reshape(1, 2);
-	Mat pt_3d_h(1,pts_size,CV_32FC4);
- */
+
     Mat pts_4d;
     vector<Point3f> points_3d;
 	cv::triangulatePoints(P,P1,_pt_set1_pt,_pt_set2_pt,pts_4d);
@@ -221,9 +209,6 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
         points_3d.push_back( p );
     }
 
-	//calculate reprojection
-//	vector<Point3f> pt_3d;
-//	convertPointsHomogeneous(pt_3d_h.reshape(4, 1), pt_3d);
     Mat_<double> KP1 = K * Mat(P1);
     Mat_<double> X = Mat_<double>(4,1);
     for (int i=0; i<points_3d.size(); i++)
@@ -246,19 +231,6 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
     }
 
 
-//	cv::Mat_<double> R = (cv::Mat_<double>(3,3) << P(0,0),P(0,1),P(0,2), P(1,0),P(1,1),P(1,2), P(2,0),P(2,1),P(2,2));
-//	Vec3d rvec;
-//    Rodrigues(R ,rvec);
-//	Vec3d tvec(P(0,3),P(1,3),P(2,3));
-//	vector<Point2f> reprojected_pt_set1;
-//	projectPoints(pt_3d,rvec,tvec,K,distcoeff,reprojected_pt_set1);
-//
-//	for (unsigned int i=0; i<pts_size; i++) {
-//		CloudPoint cp;
-//		cp.pt = pt_3d[i];
-//		pointcloud.push_back(cp);
-//		reproj_error.push_back(norm(_pt_set1_pt[i]-reprojected_pt_set1[i]));
-//	}
 #else
 	Mat_<double> KP1 = K * Mat(P1);
 #pragma omp parallel for num_threads(1)
@@ -346,19 +318,19 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 	
 	//show "range image"
 
-	{
-		double minVal,maxVal;
-		minMaxLoc(depths, &minVal, &maxVal);
-		Mat tmp(1224,1632,CV_8UC3,Scalar(0,0,0)); //cvtColor(img_1_orig, tmp, CV_BGR2HSV);
-		for (unsigned int i=0; i<pointcloud.size(); i++) {
-			double _d = MAX(MIN((pointcloud[i].pt.z-minVal)/(maxVal-minVal),1.0),0.0);
-			circle(tmp, correspImg1Pt[i].pt, 1, Scalar(255 * (1.0-(_d)),255,255), CV_FILLED);
-		}
-		cvtColor(tmp, tmp, CV_HSV2BGR);
-//		imshow("Depth Map", tmp);
-//		waitKey(0);
-//		destroyWindow("Depth Map");
-	}	
+//	{
+//		double minVal,maxVal;
+//		minMaxLoc(depths, &minVal, &maxVal);
+//		Mat tmp(1224,1632,CV_8UC3,Scalar(0,0,0)); //cvtColor(img_1_orig, tmp, CV_BGR2HSV);
+//		for (unsigned int i=0; i<pointcloud.size(); i++) {
+//			double _d = MAX(MIN((pointcloud[i].pt.z-minVal)/(maxVal-minVal),1.0),0.0);
+//			circle(tmp, correspImg1Pt[i].pt, 1, Scalar(255 * (1.0-(_d)),255,255), CV_FILLED);
+//		}
+//		cvtColor(tmp, tmp, CV_HSV2BGR);
+////		imshow("Depth Map", tmp);
+////		waitKey(0);
+////		destroyWindow("Depth Map");
+//	}
 
 	
 	return mse[0];

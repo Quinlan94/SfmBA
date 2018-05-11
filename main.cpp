@@ -3,6 +3,8 @@
  * @brief SURF detector + descriptor + FLANN Matcher
  * @author A. Huaman
  */
+
+//pcl的库头文件放在最上面，不然会出现莫名奇妙的错误
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
@@ -16,8 +18,10 @@
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <opencv2/calib3d/calib3d.hpp>
-//#include "opencv2/nonfree/features2d.hpp"
+
 #include <opencv2/core/core.hpp>
+
+#include <boost/filesystem.hpp>
 
 
 #include "FeatureMatching.h"
@@ -29,7 +33,7 @@
 
 
 #include <stdlib.h>
-//#include <windows.h>
+
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <math.h>
@@ -40,13 +44,12 @@
 using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;
+using namespace boost::filesystem;
 
 
-void readme();
-//
-//float imgdata[2448][3264][3];
-//float texture[2448][3264][3];
-int width=0, height=0, rx = 0, ry = 0;  
+
+
+int rx = 0, ry = 0;
 int eyex = 30, eyez = 20, atx = 100, atz = 50; 
 int eyey = -15;
 float scalar = 0.1;        //scalar of converting pixel color to float coordinates 
@@ -54,6 +57,7 @@ vector<CloudPoint> pointcloud;
 float allx = 0.0;
 float ally = 0.0;
 float allz = 0.0;
+vector<Mat> images;
 
 
 
@@ -137,21 +141,38 @@ void reshape (int w, int h) {
 
 
 
-////Function Main
+
 int main( int argc, char** argv )
 {
+    boost::filesystem::path images_dir("../Images");
+    if(!exists(images_dir))
+    {
+        cout<< " 该目录不存在！！！ " << std::endl;
+        return -1;
+    }
+    boost::filesystem::path::iterator image_file = images_dir.begin();
+    while(image_file != images_dir.end())
+    {
+        //Mat img = imread( *(image_file));
+        cout<< *image_file<<endl;
+        //images.push_back(img);
+        image_file++;
+
+    }
+
+
 
 	Mat img_1 = imread("../1.png");
 	Mat img_2 = imread("../2.png");
     std::vector< DMatch > matches;
-	std::vector<KeyPoint> keypoints_1, keypoints_2,keypts1_good,keypts2_good, corr;
-	width = img_1.cols;
-	height = img_1.rows;
+	std::vector<KeyPoint> keypoints_1, keypoints_2,keypts1_good,keypts2_good;
+//	width = img_1.cols;
+//	height = img_1.rows;
 
 	if( !img_1.data || !img_2.data )
 	{ std::cout<< " --(!) Error reading images " << std::endl; return -1; } /// Read in Images
 
-	// Start Feature Matching
+	// 匹配
 	int Method = 1;
 	FeatureMatching(img_1,img_2,keypoints_1,keypoints_2,keypts1_good,keypts2_good,&matches,Method); // matched featurepoints
 	 // Calculate Matrices
@@ -161,7 +182,7 @@ int main( int argc, char** argv )
 
 	vector<KeyPoint> imgpts1_tmp,imgpts2_tmp,imgpts1_good,imgpts2_good;
 	GetAlignedPointsFromMatch(keypoints_1, keypoints_2, matches, imgpts1_tmp, imgpts2_tmp);
-	KeyPointsToPoints(imgpts1_tmp, pts1);
+	KeyPointsToPoints(imgpts1_tmp, pts1);//点按顺序排列，并且已对齐
 	KeyPointsToPoints(imgpts2_tmp, pts2);
 	double minVal,maxVal;
 	cv::minMaxIdx(pts1,&minVal,&maxVal);
@@ -222,24 +243,15 @@ int main( int argc, char** argv )
     cout <<"R: "<<R_cv<<endl;
     cout <<"t: "<<t_cv<<endl;
 
-    /*
-	string filename = "C:\\OpenCV_Project\\camera_calibration\\result.xml";
-	FileStorage fs(filename, FileStorage::READ);
-	FileNode n = fs.getFirstTopLevelNode();
-	fs["Camera_Matrix"] >> K;
-	fs["Distortion_Coefficients"] >> discoeff;
-	cout << "K " << endl << Mat(K) << endl;
-     */
+
 	Kinv = K.inv();
 
 	Matx34d P, P1;
 	
 	
 
-	bool CM = FindCameraMatrices(K,Kinv,F,P,P1,R_cv,t_cv,discoeff,imgpts1_tmp,imgpts2_tmp,imgpts1_good,imgpts2_good,matches,pointcloud);
-	
-	// Reconstruct 3D
-	//double mse = TriangulatePoints(keypts1_good,keypts2_good,K,Kinv,P,P1,pointcloud,keypts1_good,discoeff);
+	bool CM = FindCameraMatrices(K,Kinv,F,P,P1,R_cv,t_cv,discoeff,imgpts1_good,imgpts2_good,matches,pointcloud);
+
 
 	// Write points to file
 	Mat X(img_1.rows,img_1.cols,CV_32FC1);
@@ -342,8 +354,3 @@ int main( int argc, char** argv )
 	return 0;
 }
 
-/**
- * @function readme
- */
-void readme()
-{ std::cout << " Usage: ./SURF_FlannMatcher <img1> <img2>" << std::endl; }

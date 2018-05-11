@@ -1,0 +1,6 @@
+/home/quinlan/Learn/SfmBA/build/CMakeFiles/rebuild_cache.dir
+/home/quinlan/Learn/SfmBA/build/CMakeFiles/edit_cache.dir
+/home/quinlan/Learn/SfmBA/build/CMakeFiles/sfm.dir
+/home/quinlan/Learn/SfmBA/build/src/CMakeFiles/edit_cache.dir
+/home/quinlan/Learn/SfmBA/build/src/CMakeFiles/rebuild_cache.dir
+/home/quinlan/Learn/SfmBA/build/src/CMakeFiles/mysfm.dir
