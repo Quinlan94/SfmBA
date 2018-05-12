@@ -1,3 +1,5 @@
+
+
 #include "CalculateCameraMatrix.h"
 #include "Triangulation.h"
 #include "Common.h"
@@ -29,7 +31,8 @@ bool FindCameraMatrices(const Mat& K,
 						vector<KeyPoint>& imgpts1_good,
 						vector<KeyPoint>& imgpts2_good,
 						vector<DMatch>& matches,
-						vector<CloudPoint>& outCloud)
+						vector<CloudPoint>& outCloud,
+                        std::set<int>& kp_idx)
 {
     //================================================================
 	Mat_<double> E = K.t() * F * K; // Essential Matrix
@@ -122,9 +125,11 @@ bool FindCameraMatrices(const Mat& K,
 						}
 					}				
 				}			
-			}
+    }
 			for (unsigned int i=0; i<pcloud.size(); i++) {
 				outCloud.push_back(pcloud[i]);
+                //kp_idx.insert(i);
+
 			}
 
 }

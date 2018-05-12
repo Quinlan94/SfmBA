@@ -1,4 +1,4 @@
-
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d/features2d.hpp>
@@ -27,7 +27,8 @@ void GetAlignedPointsFromMatch(const std::vector<cv::KeyPoint>& imgpts1,
 							   const std::vector<cv::KeyPoint>& imgpts2,
 							   const std::vector<cv::DMatch>& matches,
 							   std::vector<cv::KeyPoint>& pt_set1,
-							   std::vector<cv::KeyPoint>& pt_set2);
+							   std::vector<cv::KeyPoint>& pt_set2,
+							   std::vector<int>& kp_idx);
 
 
 

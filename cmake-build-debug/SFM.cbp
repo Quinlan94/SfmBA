@@ -44,7 +44,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add option="-DDISABLE_OPENNI2"/>
 					<Add option="-DDISABLE_PCAP"/>
 					<Add option="-DDISABLE_PNG"/>
 					<Add option="-DvtkFiltersFlowPaths_AUTOINIT=1(vtkFiltersParallelFlowPaths)"/>
@@ -76,6 +75,7 @@
 					<Add directory="/usr/include/pcl-1.7"/>
 					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/include/ni"/>
+					<Add directory="/usr/include/openni2"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/local/include/opencv"/>
 					<Add directory="/home/quinlan/Learn/SfmBA/include"/>
@@ -105,7 +105,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add option="-DDISABLE_OPENNI2"/>
 					<Add option="-DDISABLE_PCAP"/>
 					<Add option="-DDISABLE_PNG"/>
 					<Add option="-DvtkFiltersFlowPaths_AUTOINIT=1(vtkFiltersParallelFlowPaths)"/>
@@ -137,6 +136,7 @@
 					<Add directory="/usr/include/pcl-1.7"/>
 					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/include/ni"/>
+					<Add directory="/usr/include/openni2"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/local/include/opencv"/>
 					<Add directory="/home/quinlan/Learn/SfmBA/include"/>
@@ -166,7 +166,6 @@
 				<Option type="3"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add option="-DDISABLE_OPENNI2"/>
 					<Add option="-DDISABLE_PCAP"/>
 					<Add option="-DDISABLE_PNG"/>
 					<Add option="-DvtkFiltersFlowPaths_AUTOINIT=1(vtkFiltersParallelFlowPaths)"/>
@@ -195,6 +194,7 @@
 					<Add directory="/usr/include/pcl-1.7"/>
 					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/include/ni"/>
+					<Add directory="/usr/include/openni2"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/local/include/opencv"/>
 					<Add directory="/home/quinlan/Learn/SfmBA/include"/>
@@ -219,7 +219,6 @@
 				<Option type="3"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add option="-DDISABLE_OPENNI2"/>
 					<Add option="-DDISABLE_PCAP"/>
 					<Add option="-DDISABLE_PNG"/>
 					<Add option="-DvtkFiltersFlowPaths_AUTOINIT=1(vtkFiltersParallelFlowPaths)"/>
@@ -248,6 +247,7 @@
 					<Add directory="/usr/include/pcl-1.7"/>
 					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/include/ni"/>
+					<Add directory="/usr/include/openni2"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/local/include/opencv"/>
 					<Add directory="/home/quinlan/Learn/SfmBA/include"/>

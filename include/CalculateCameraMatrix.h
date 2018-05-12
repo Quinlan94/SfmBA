@@ -1,3 +1,5 @@
+#pragma once
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
@@ -18,7 +20,8 @@ bool FindCameraMatrices(const Mat& K,
 						vector<KeyPoint>& imgpts1_good,
 						vector<KeyPoint>& imgpts2_good,
 						vector<DMatch>& matches,
-						vector<CloudPoint>& outCloud);
+						vector<CloudPoint>& outCloud,
+                        std::set<int>& kp_idx);
 
 
 

@@ -1,3 +1,4 @@
+#pragma once
 
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
