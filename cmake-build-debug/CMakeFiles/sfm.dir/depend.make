@@ -5,7 +5,6 @@ CMakeFiles/sfm.dir/main.cpp.o: ../include/ArcBall.h
 CMakeFiles/sfm.dir/main.cpp.o: ../include/CalculateCameraMatrix.h
 CMakeFiles/sfm.dir/main.cpp.o: ../include/Common.h
 CMakeFiles/sfm.dir/main.cpp.o: ../include/FeatureMatching.h
-CMakeFiles/sfm.dir/main.cpp.o: ../include/SaveXYZimages.h
 CMakeFiles/sfm.dir/main.cpp.o: ../include/Triangulation.h
 CMakeFiles/sfm.dir/main.cpp.o: ../main.cpp
 CMakeFiles/sfm.dir/main.cpp.o: /usr/include/eigen3/Eigen/Cholesky

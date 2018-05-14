@@ -48,7 +48,7 @@ bool FindCameraMatrices(const Mat& K,
 	Mat_<double> t1(1,3);
            t1 = t_cv;
 	Mat_<double> t2(1,3);
-    /*
+   /*
 	SVD svd(E);
 	Matx33d W(0,-1,0,	
 		1,0,0,
@@ -70,22 +70,24 @@ bool FindCameraMatrices(const Mat& K,
 				R1(2,0),	R1(2,1),	R1(2,2),	t1(2)); // Camara Matrix
 	P = Matx34d(1,0,0,0,
 				0,1,0,0,
-				0,0,1,0);
+				0,0,1,0);*/
 
-	cout << "Testing P1 " << endl << Mat(P1) << endl;
-*/
-    P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t1(0),
-                 R1(1,0),	R1(1,1),	R1(1,2),	t1(1),
-                 R1(2,0),	R1(2,1),	R1(2,2),	t1(2));
-    P = Matx34d(1,0,0,0,
-                0,1,0,0,
-                0,0,1,0);
+
+//    P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t1(0),
+//                 R1(1,0),	R1(1,1),	R1(1,2),	t1(1),
+//                 R1(2,0),	R1(2,1),	R1(2,2),	t1(2));
+//    P = Matx34d(1,0,0,0,
+//                0,1,0,0,
+//                0,0,1,0);
+	cout << "Testing P1 " << endl << P1 << endl;
+
 	vector<CloudPoint> pcloud,pcloud1; 
 	vector<KeyPoint> corresp;
 
 	double reproj_error1 = TriangulatePoints(imgpts1_good,imgpts2_good,K,Kinv,P,P1,pcloud,corresp,discoeff);
 	double reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,P,pcloud1,corresp,discoeff);
 	vector<uchar> tmp_status;
+    /*
 	if (!TestTriangulation(pcloud,P1,tmp_status) || !TestTriangulation(pcloud1,P,tmp_status) || reproj_error1 > 100.0 || reproj_error2 > 100.0) 
 	{
 				P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t2(0),
@@ -125,7 +127,7 @@ bool FindCameraMatrices(const Mat& K,
 						}
 					}				
 				}			
-    }
+    }*/
 			for (unsigned int i=0; i<pcloud.size(); i++) {
 				outCloud.push_back(pcloud[i]);
                 //kp_idx.insert(i);

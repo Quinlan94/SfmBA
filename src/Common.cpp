@@ -1,6 +1,4 @@
-/* Funtions libary for keypoints and points used.
 
-*/
 
 
 #include "Common.h"

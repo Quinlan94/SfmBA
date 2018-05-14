@@ -6,7 +6,6 @@ CMakeFiles/sfm.dir/main.cpp.o
  ../include/CalculateCameraMatrix.h
  ../include/Common.h
  ../include/FeatureMatching.h
- ../include/SaveXYZimages.h
  ../include/Triangulation.h
  /home/quinlan/Learn/SfmBA/main.cpp
  /usr/include/eigen3/Eigen/Cholesky

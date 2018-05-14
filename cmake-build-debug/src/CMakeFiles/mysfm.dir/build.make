@@ -129,81 +129,9 @@ src/CMakeFiles/mysfm.dir/FeatureMatching.cpp.o.provides: src/CMakeFiles/mysfm.di
 src/CMakeFiles/mysfm.dir/FeatureMatching.cpp.o.provides.build: src/CMakeFiles/mysfm.dir/FeatureMatching.cpp.o
 
 
-src/CMakeFiles/mysfm.dir/fed.cpp.o: src/CMakeFiles/mysfm.dir/flags.make
-src/CMakeFiles/mysfm.dir/fed.cpp.o: ../src/fed.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/CMakeFiles/mysfm.dir/fed.cpp.o"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mysfm.dir/fed.cpp.o -c /home/quinlan/Learn/SfmBA/src/fed.cpp
-
-src/CMakeFiles/mysfm.dir/fed.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mysfm.dir/fed.cpp.i"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/quinlan/Learn/SfmBA/src/fed.cpp > CMakeFiles/mysfm.dir/fed.cpp.i
-
-src/CMakeFiles/mysfm.dir/fed.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mysfm.dir/fed.cpp.s"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/quinlan/Learn/SfmBA/src/fed.cpp -o CMakeFiles/mysfm.dir/fed.cpp.s
-
-src/CMakeFiles/mysfm.dir/fed.cpp.o.requires:
-
-.PHONY : src/CMakeFiles/mysfm.dir/fed.cpp.o.requires
-
-src/CMakeFiles/mysfm.dir/fed.cpp.o.provides: src/CMakeFiles/mysfm.dir/fed.cpp.o.requires
-	$(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/fed.cpp.o.provides.build
-.PHONY : src/CMakeFiles/mysfm.dir/fed.cpp.o.provides
-
-src/CMakeFiles/mysfm.dir/fed.cpp.o.provides.build: src/CMakeFiles/mysfm.dir/fed.cpp.o
-
-
-src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o: src/CMakeFiles/mysfm.dir/flags.make
-src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o: ../src/nldiffusion_functions.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o -c /home/quinlan/Learn/SfmBA/src/nldiffusion_functions.cpp
-
-src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.i"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/quinlan/Learn/SfmBA/src/nldiffusion_functions.cpp > CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.i
-
-src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.s"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/quinlan/Learn/SfmBA/src/nldiffusion_functions.cpp -o CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.s
-
-src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.requires:
-
-.PHONY : src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.requires
-
-src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.provides: src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.requires
-	$(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.provides.build
-.PHONY : src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.provides
-
-src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.provides.build: src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o
-
-
-src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o: src/CMakeFiles/mysfm.dir/flags.make
-src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o: ../src/SaveXYZimages.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o -c /home/quinlan/Learn/SfmBA/src/SaveXYZimages.cpp
-
-src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mysfm.dir/SaveXYZimages.cpp.i"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/quinlan/Learn/SfmBA/src/SaveXYZimages.cpp > CMakeFiles/mysfm.dir/SaveXYZimages.cpp.i
-
-src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mysfm.dir/SaveXYZimages.cpp.s"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/quinlan/Learn/SfmBA/src/SaveXYZimages.cpp -o CMakeFiles/mysfm.dir/SaveXYZimages.cpp.s
-
-src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.requires:
-
-.PHONY : src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.requires
-
-src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.provides: src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.requires
-	$(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.provides.build
-.PHONY : src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.provides
-
-src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.provides.build: src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o
-
-
 src/CMakeFiles/mysfm.dir/Triangulation.cpp.o: src/CMakeFiles/mysfm.dir/flags.make
 src/CMakeFiles/mysfm.dir/Triangulation.cpp.o: ../src/Triangulation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object src/CMakeFiles/mysfm.dir/Triangulation.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/CMakeFiles/mysfm.dir/Triangulation.cpp.o"
 	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mysfm.dir/Triangulation.cpp.o -c /home/quinlan/Learn/SfmBA/src/Triangulation.cpp
 
 src/CMakeFiles/mysfm.dir/Triangulation.cpp.i: cmake_force
@@ -225,40 +153,12 @@ src/CMakeFiles/mysfm.dir/Triangulation.cpp.o.provides: src/CMakeFiles/mysfm.dir/
 src/CMakeFiles/mysfm.dir/Triangulation.cpp.o.provides.build: src/CMakeFiles/mysfm.dir/Triangulation.cpp.o
 
 
-src/CMakeFiles/mysfm.dir/utils.cpp.o: src/CMakeFiles/mysfm.dir/flags.make
-src/CMakeFiles/mysfm.dir/utils.cpp.o: ../src/utils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object src/CMakeFiles/mysfm.dir/utils.cpp.o"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mysfm.dir/utils.cpp.o -c /home/quinlan/Learn/SfmBA/src/utils.cpp
-
-src/CMakeFiles/mysfm.dir/utils.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mysfm.dir/utils.cpp.i"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/quinlan/Learn/SfmBA/src/utils.cpp > CMakeFiles/mysfm.dir/utils.cpp.i
-
-src/CMakeFiles/mysfm.dir/utils.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mysfm.dir/utils.cpp.s"
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/quinlan/Learn/SfmBA/src/utils.cpp -o CMakeFiles/mysfm.dir/utils.cpp.s
-
-src/CMakeFiles/mysfm.dir/utils.cpp.o.requires:
-
-.PHONY : src/CMakeFiles/mysfm.dir/utils.cpp.o.requires
-
-src/CMakeFiles/mysfm.dir/utils.cpp.o.provides: src/CMakeFiles/mysfm.dir/utils.cpp.o.requires
-	$(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/utils.cpp.o.provides.build
-.PHONY : src/CMakeFiles/mysfm.dir/utils.cpp.o.provides
-
-src/CMakeFiles/mysfm.dir/utils.cpp.o.provides.build: src/CMakeFiles/mysfm.dir/utils.cpp.o
-
-
 # Object files for target mysfm
 mysfm_OBJECTS = \
 "CMakeFiles/mysfm.dir/CalculateCameraMatrix.cpp.o" \
 "CMakeFiles/mysfm.dir/Common.cpp.o" \
 "CMakeFiles/mysfm.dir/FeatureMatching.cpp.o" \
-"CMakeFiles/mysfm.dir/fed.cpp.o" \
-"CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o" \
-"CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o" \
-"CMakeFiles/mysfm.dir/Triangulation.cpp.o" \
-"CMakeFiles/mysfm.dir/utils.cpp.o"
+"CMakeFiles/mysfm.dir/Triangulation.cpp.o"
 
 # External object files for target mysfm
 mysfm_EXTERNAL_OBJECTS =
@@ -266,14 +166,10 @@ mysfm_EXTERNAL_OBJECTS =
 src/libmysfm.so: src/CMakeFiles/mysfm.dir/CalculateCameraMatrix.cpp.o
 src/libmysfm.so: src/CMakeFiles/mysfm.dir/Common.cpp.o
 src/libmysfm.so: src/CMakeFiles/mysfm.dir/FeatureMatching.cpp.o
-src/libmysfm.so: src/CMakeFiles/mysfm.dir/fed.cpp.o
-src/libmysfm.so: src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o
-src/libmysfm.so: src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o
 src/libmysfm.so: src/CMakeFiles/mysfm.dir/Triangulation.cpp.o
-src/libmysfm.so: src/CMakeFiles/mysfm.dir/utils.cpp.o
 src/libmysfm.so: src/CMakeFiles/mysfm.dir/build.make
 src/libmysfm.so: src/CMakeFiles/mysfm.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX shared library libmysfm.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/quinlan/Learn/SfmBA/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared library libmysfm.so"
 	cd /home/quinlan/Learn/SfmBA/cmake-build-debug/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mysfm.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -284,11 +180,7 @@ src/CMakeFiles/mysfm.dir/build: src/libmysfm.so
 src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/CalculateCameraMatrix.cpp.o.requires
 src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/Common.cpp.o.requires
 src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/FeatureMatching.cpp.o.requires
-src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/fed.cpp.o.requires
-src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o.requires
-src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o.requires
 src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/Triangulation.cpp.o.requires
-src/CMakeFiles/mysfm.dir/requires: src/CMakeFiles/mysfm.dir/utils.cpp.o.requires
 
 .PHONY : src/CMakeFiles/mysfm.dir/requires
 

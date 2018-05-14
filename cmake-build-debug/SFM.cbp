@@ -278,19 +278,7 @@
 		<Unit filename="/home/quinlan/Learn/SfmBA/src/FeatureMatching.cpp">
 			<Option target="mysfm"/>
 		</Unit>
-		<Unit filename="/home/quinlan/Learn/SfmBA/src/SaveXYZimages.cpp">
-			<Option target="mysfm"/>
-		</Unit>
 		<Unit filename="/home/quinlan/Learn/SfmBA/src/Triangulation.cpp">
-			<Option target="mysfm"/>
-		</Unit>
-		<Unit filename="/home/quinlan/Learn/SfmBA/src/fed.cpp">
-			<Option target="mysfm"/>
-		</Unit>
-		<Unit filename="/home/quinlan/Learn/SfmBA/src/nldiffusion_functions.cpp">
-			<Option target="mysfm"/>
-		</Unit>
-		<Unit filename="/home/quinlan/Learn/SfmBA/src/utils.cpp">
 			<Option target="mysfm"/>
 		</Unit>
 		<Unit filename="/home/quinlan/Learn/SfmBA/CMakeLists.txt">

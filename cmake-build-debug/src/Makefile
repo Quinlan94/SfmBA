@@ -206,33 +206,6 @@ FeatureMatching.cpp.s:
 	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/FeatureMatching.cpp.s
 .PHONY : FeatureMatching.cpp.s
 
-SaveXYZimages.o: SaveXYZimages.cpp.o
-
-.PHONY : SaveXYZimages.o
-
-# target to build an object file
-SaveXYZimages.cpp.o:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.o
-.PHONY : SaveXYZimages.cpp.o
-
-SaveXYZimages.i: SaveXYZimages.cpp.i
-
-.PHONY : SaveXYZimages.i
-
-# target to preprocess a source file
-SaveXYZimages.cpp.i:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.i
-.PHONY : SaveXYZimages.cpp.i
-
-SaveXYZimages.s: SaveXYZimages.cpp.s
-
-.PHONY : SaveXYZimages.s
-
-# target to generate assembly for a file
-SaveXYZimages.cpp.s:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/SaveXYZimages.cpp.s
-.PHONY : SaveXYZimages.cpp.s
-
 Triangulation.o: Triangulation.cpp.o
 
 .PHONY : Triangulation.o
@@ -260,87 +233,6 @@ Triangulation.cpp.s:
 	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/Triangulation.cpp.s
 .PHONY : Triangulation.cpp.s
 
-fed.o: fed.cpp.o
-
-.PHONY : fed.o
-
-# target to build an object file
-fed.cpp.o:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/fed.cpp.o
-.PHONY : fed.cpp.o
-
-fed.i: fed.cpp.i
-
-.PHONY : fed.i
-
-# target to preprocess a source file
-fed.cpp.i:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/fed.cpp.i
-.PHONY : fed.cpp.i
-
-fed.s: fed.cpp.s
-
-.PHONY : fed.s
-
-# target to generate assembly for a file
-fed.cpp.s:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/fed.cpp.s
-.PHONY : fed.cpp.s
-
-nldiffusion_functions.o: nldiffusion_functions.cpp.o
-
-.PHONY : nldiffusion_functions.o
-
-# target to build an object file
-nldiffusion_functions.cpp.o:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.o
-.PHONY : nldiffusion_functions.cpp.o
-
-nldiffusion_functions.i: nldiffusion_functions.cpp.i
-
-.PHONY : nldiffusion_functions.i
-
-# target to preprocess a source file
-nldiffusion_functions.cpp.i:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.i
-.PHONY : nldiffusion_functions.cpp.i
-
-nldiffusion_functions.s: nldiffusion_functions.cpp.s
-
-.PHONY : nldiffusion_functions.s
-
-# target to generate assembly for a file
-nldiffusion_functions.cpp.s:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/nldiffusion_functions.cpp.s
-.PHONY : nldiffusion_functions.cpp.s
-
-utils.o: utils.cpp.o
-
-.PHONY : utils.o
-
-# target to build an object file
-utils.cpp.o:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/utils.cpp.o
-.PHONY : utils.cpp.o
-
-utils.i: utils.cpp.i
-
-.PHONY : utils.i
-
-# target to preprocess a source file
-utils.cpp.i:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/utils.cpp.i
-.PHONY : utils.cpp.i
-
-utils.s: utils.cpp.s
-
-.PHONY : utils.s
-
-# target to generate assembly for a file
-utils.cpp.s:
-	cd /home/quinlan/Learn/SfmBA/cmake-build-debug && $(MAKE) -f src/CMakeFiles/mysfm.dir/build.make src/CMakeFiles/mysfm.dir/utils.cpp.s
-.PHONY : utils.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -359,21 +251,9 @@ help:
 	@echo "... FeatureMatching.o"
 	@echo "... FeatureMatching.i"
 	@echo "... FeatureMatching.s"
-	@echo "... SaveXYZimages.o"
-	@echo "... SaveXYZimages.i"
-	@echo "... SaveXYZimages.s"
 	@echo "... Triangulation.o"
 	@echo "... Triangulation.i"
 	@echo "... Triangulation.s"
-	@echo "... fed.o"
-	@echo "... fed.i"
-	@echo "... fed.s"
-	@echo "... nldiffusion_functions.o"
-	@echo "... nldiffusion_functions.i"
-	@echo "... nldiffusion_functions.s"
-	@echo "... utils.o"
-	@echo "... utils.i"
-	@echo "... utils.s"
 .PHONY : help
 
 

@@ -29,7 +29,7 @@
 #include "CalculateCameraMatrix.h"
 #include "Triangulation.h"
 #include "Common.h"
-#include "SaveXYZimages.h"
+
 #include <ArcBall.h>
 
 #include <string>
@@ -150,10 +150,9 @@ void reshape (int w, int h) {
 */
 
 
-
-
 int main( int argc, char** argv )
 {
+
     PointCloud::Ptr pointCloud_PCL( new PointCloud );
     boost::filesystem::path images_dir("../Images");
     if(!exists(images_dir))
@@ -185,6 +184,17 @@ int main( int argc, char** argv )
     vector<v_match> v_matches(n);
     vector<DMatch> v_new_matches;
 
+    Mat P1_trans;
+    Matx34d P;
+    P1_trans = (Mat_<double>(4,4)<<1,0,0,0,
+                            0,1,0,0,
+                            0,0,1,0,
+                            0,0,0,1);
+    cout << "Testing P1_trans " << endl << P1_trans << endl;
+
+    P= Matx34d(1,0,0,0,
+               0,1,0,0,
+               0,0,1,0);
 
     Mat v_K,v_Kinv,v_discoeff;
     v_K = ( Mat_<double> ( 3,3 ) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1 );
@@ -234,17 +244,33 @@ int main( int argc, char** argv )
             essential_matrix = findEssentialMat(pts[i],pts[i+1],focal_length,principal_point,RANSAC);
             cout << "E: "<<essential_matrix<<endl;
 
-            Mat R_cv,t_cv;
-            recoverPose(essential_matrix,pts[i],pts[i+1],R_cv,t_cv,focal_length,principal_point);
-            cout <<"R: "<<R_cv<<endl;
-            cout <<"t: "<<t_cv<<endl;
+            //Mat R_cv,t_cv;
+            Mat_<double> R(3,3);
+            Mat_<double> t(1,3);
+            recoverPose(essential_matrix,pts[i],pts[i+1],R,t,focal_length,principal_point);
+            cout <<"R: "<<R<<endl;
+            cout <<"t: "<<t<<endl;
 
+
+            Mat P1_temp;
+            Matx34d P1;
 
             v_Kinv = v_K.inv();
+            P1_temp = Mat_<double>(4,4)<<(R(0,0),	R(0,1),	R(0,2),	t(0),
+                                          R(1,0),	R(1,1),	R(1,2),	t(1),
+                                          R(2,0),	R(2,1),	R(2,2),	t(2),
+                                          0 ,         0,     0,      1);
 
-            Matx34d P, P1;
 
-            FindCameraMatrices(v_K,v_Kinv,F,P,P1,R_cv,t_cv,v_discoeff,
+            P1_trans = P1_trans * P1_temp;
+
+            cout << "Testing P1_trans " << endl << P1_trans << endl;
+            P1 = Matx34d (P1_trans.at<double>(0,0),	P1_trans.at<double>(0,1),	P1_trans.at<double>(0,2),	P1_trans.at<double>(0,3),
+                         P1_trans.at<double>(1,0),	P1_trans.at<double>(1,1),	P1_trans.at<double>(1,2),	P1_trans.at<double>(1,3),
+                         P1_trans.at<double>(2,0),	P1_trans.at<double>(2,1),	P1_trans.at<double>(2,2),	P1_trans.at<double>(2,3));
+            cout << "Testing P " << endl << P << endl;
+            cout << "Testing P1 " << endl << P1 << endl;
+            FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
                                          imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_good_idx);
             for(int i=0;i<pointcloud.size();i++ )
             {
@@ -258,7 +284,62 @@ int main( int argc, char** argv )
             pointcloud.clear();
             images_pair_is_initial = true;
 
+        } else{
+
+            vector<Point3d> pts_3d;
+            vector<Point2d> pts_2d;
+            for (DMatch m:v_matches[i])
+            {
+                if(kp_depth_idx.find(m.queryIdx)==kp_depth_idx.end())
+                {
+                    pts_3d.push_back(pointcloud[i].pt);
+                    pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);
+
+
+
+                }
+            }
+            cout<<"3d-2d pairs: "<<pts_3d.size() <<endl;
+            Mat r;
+            Mat_<double> R(3,3);
+            Mat_<double> t(1,3);
+            solvePnP ( pts_3d, pts_2d, v_K, Mat(), r, t, false );
+
+            cv::Rodrigues ( r, R );
+
+            cout<<"R="<<endl<<R<<endl;
+            cout<<"t="<<endl<<t<<endl;
+            v_Kinv = v_K.inv();
+
+
+            Mat P1_temp;
+            Matx34d P1;
+
+            v_Kinv = v_K.inv();
+            P1_temp = Mat_<double>(4,4)<<(R(0,0),	R(0,1),	R(0,2),	t(0),
+                                          R(1,0),	R(1,1),	R(1,2),	t(1),
+                                          R(2,0),	R(2,1),	R(2,2),	t(2),
+                                          0 ,         0,     0,      1);
+            P1_trans = P1_trans * P1_temp;
+            P1 = Matx34d (P1_trans.at<double>(0,0),	P1_trans.at<double>(0,1),	P1_trans.at<double>(0,2),	P1_trans.at<double>(0,3),
+                          P1_trans.at<double>(1,0),	P1_trans.at<double>(1,1),	P1_trans.at<double>(1,2),	P1_trans.at<double>(1,3),
+                          P1_trans.at<double>(2,0),	P1_trans.at<double>(2,1),	P1_trans.at<double>(2,2),	P1_trans.at<double>(2,3));
+
+
+            FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
+                               imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_good_idx);
+            for(int i=0;i<pointcloud.size();i++ )
+            {
+                Point_PCL p;
+                p.x = pointcloud[i].pt.x;
+                p.y = pointcloud[i].pt.y;
+                p.z = pointcloud[i].pt.z;
+
+                pointCloud_PCL->points.push_back( p );
+            }
+            pointcloud.clear();
         }
+
 
 
 
@@ -385,60 +466,6 @@ int main( int argc, char** argv )
     pcl::io::savePCDFileBinary("../pointCloud_PCL.pcd", *pointCloud_PCL );
 
 
-
-//	double Nindex = X.rows * X.cols;
-//
-//
-//	for(int i=0;i<pointcloud.size();i++ )
-//	{
-//		allx += pointcloud[i].pt.x;
-//		ally += pointcloud[i].pt.y;
-//		allz += pointcloud[i].pt.z;
-//	}
-//	allx = 1.0 * allx/(float)pointcloud.size();//相机所看向的位置，点太多，全面考虑所有点
-//	ally = 1.0 * ally/(float)pointcloud.size();
-//	allz = 1.0 * allz/(float)pointcloud.size();
-
-
-
-	/*
-	for(int i=0;i<X.rows;i++)
-	{
-		for(int j=0;j<X.cols;j++)
-		{
-			float* Xr =X.ptr<float>(i);
-			imgdata[i][j][0] = Xr[j];
-			float* TXr = img_1.ptr<float>(i);
-			texture[i][j][0] = TXr[j];
-		}
-	}
-
-
-	for(int i=0;i<Y.rows;i++)
-	{
-		for(int j=0;j<Y.cols;j++)
-		{
-			float* Yr =Y.ptr<float>(i);
-			imgdata[i][j][1] = Yr[j];
-			float* TYr = img_1.ptr<float>(i);
-			texture[i][j][1] = TYr[j];
-		}
-	}
-
-
-	for(int i=0;i<Z.rows;i++)
-	{
-		for(int j=0;j<Z.cols;j++)
-		{
-			float* Zr =Z.ptr<float>(i);
-			imgdata[i][j][2] = Zr[j];
-			float* TZr = img_1.ptr<float>(i);
-			texture[i][j][2] = TZr[j];
-		}
-	}
-	*/
-
-
    /*
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_SINGLE | GLUT_RGBA);
@@ -453,7 +480,7 @@ int main( int argc, char** argv )
 	glutPostRedisplay();    
 	glutMainLoop();  
 */
-	//cvWaitKey(0);
+
 
 	return 0;
 }
