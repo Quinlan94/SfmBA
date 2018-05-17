@@ -56,6 +56,20 @@ void PointsToKeyPoints(const vector<Point2f>& ps, vector<KeyPoint>& kps)
 	kps.clear();
 	for (unsigned int i=0; i<ps.size(); i++) kps.push_back(KeyPoint(ps[i],1.0f));
 }
+cv::Point3d FirstFrame2Second(cv::Point3d point,Mat P)
+{
+	Mat_<double> X = Mat_<double>(4,1);
+	X << point.x,point.y,point.z,1;
+	X = P * X;
+	point.x = X(0);
+	point.y = X(1);
+	point.z = X(2);
+
+	//cout << "Testing P1 is same as trans: " << P << endl;
+
+	return  point;
+
+}
 
 
 

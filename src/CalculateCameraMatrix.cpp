@@ -35,12 +35,12 @@ bool FindCameraMatrices(const Mat& K,
                         std::set<int>& kp_idx)
 {
     //================================================================
-	Mat_<double> E = K.t() * F * K; // Essential Matrix
-	if(fabsf(determinant(E)) > 1e-05) {
-		cout << "det(E) != 0 : " << determinant(E) << "\n";
-		return false;
-	}
-	cout << "E method : "<<E<<endl;
+//	Mat_<double> E = K.t() * F * K; // Essential Matrix
+//	if(fabsf(determinant(E)) > 1e-05) {
+//		cout << "det(E) != 0 : " << determinant(E) << "\n";
+//		return false;
+//	}
+//	cout << "E method : "<<E<<endl;
 	Mat_<double> R1(3,3);
             R1= R_cv;
 	Mat_<double> R2(3,3);

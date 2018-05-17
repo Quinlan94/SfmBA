@@ -265,7 +265,7 @@ int main( int argc, char** argv )
                                           R(1,0),	R(1,1),	R(1,2),	t(1),
                                           R(2,0),	R(2,1),	R(2,2),	t(2),
                                           0 ,         0,     0,      1);
-            cout << "Testing P1_temp " << endl << P1_temp << endl;
+            cout << "Testing P1_temp: " << P1_temp << endl;
 
 
             P1_trans = P1_trans * P1_temp;
@@ -301,10 +301,8 @@ int main( int argc, char** argv )
                 {
                     vector<int>::iterator it = lower_bound(kp_good_depth_idx.begin(),kp_good_depth_idx.end(),m.queryIdx);
                     int index = distance(kp_good_depth_idx.begin(),it);
-                    pts_3d.push_back(pointcloud[index].pt);
+                    pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,P1_trans));
                     pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);
-
-
 
                 }
             }
@@ -326,15 +324,15 @@ int main( int argc, char** argv )
             Matx34d P1;
 
             v_Kinv = v_K.inv();
-            P1_temp = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
+            P1= Matx34d(R(0,0),	R(0,1),	R(0,2),	t(0),
                                           R(1,0),	R(1,1),	R(1,2),	t(1),
-                                          R(2,0),	R(2,1),	R(2,2),	t(2),
-                                          0 ,         0,     0,      1);
-            P1_trans = P1_trans * P1_temp;
-            P1 = Matx34d (P1_trans.at<double>(0,0),	P1_trans.at<double>(0,1),	P1_trans.at<double>(0,2),	P1_trans.at<double>(0,3),
-                          P1_trans.at<double>(1,0),	P1_trans.at<double>(1,1),	P1_trans.at<double>(1,2),	P1_trans.at<double>(1,3),
-                          P1_trans.at<double>(2,0),	P1_trans.at<double>(2,1),	P1_trans.at<double>(2,2),	P1_trans.at<double>(2,3));
+                                          R(2,0),	R(2,1),	R(2,2),	t(2));
 
+//            P1_trans = P1_trans * P1_temp;
+//            P1 = Matx34d (P1_trans.at<double>(0,0),	P1_trans.at<double>(0,1),	P1_trans.at<double>(0,2),	P1_trans.at<double>(0,3),
+//                          P1_trans.at<double>(1,0),	P1_trans.at<double>(1,1),	P1_trans.at<double>(1,2),	P1_trans.at<double>(1,3),
+//                          P1_trans.at<double>(2,0),	P1_trans.at<double>(2,1),	P1_trans.at<double>(2,2),	P1_trans.at<double>(2,3));
+//
 
             FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
                                imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_idx);

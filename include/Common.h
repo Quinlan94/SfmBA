@@ -29,6 +29,7 @@ void GetAlignedPointsFromMatch(const std::vector<cv::KeyPoint>& imgpts1,
 							   std::vector<cv::KeyPoint>& pt_set1,
 							   std::vector<cv::KeyPoint>& pt_set2,
 							   std::vector<int>& kp_idx);
+cv::Point3d FirstFrame2Second(cv::Point3d,cv::Mat P);
 
 
 
