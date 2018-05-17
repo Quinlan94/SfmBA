@@ -235,6 +235,11 @@ CMakeFiles/sfm.dir/main.cpp.o
  /usr/include/pcl-1.7/pcl/io/impl/pcd_io.hpp
  /usr/include/pcl-1.7/pcl/io/lzf.h
  /usr/include/pcl-1.7/pcl/io/pcd_io.h
+ /usr/include/pcl-1.7/pcl/io/ply/byte_order.h
+ /usr/include/pcl-1.7/pcl/io/ply/io_operators.h
+ /usr/include/pcl-1.7/pcl/io/ply/ply.h
+ /usr/include/pcl-1.7/pcl/io/ply/ply_parser.h
+ /usr/include/pcl-1.7/pcl/io/ply_io.h
  /usr/include/pcl-1.7/pcl/pcl_base.h
  /usr/include/pcl-1.7/pcl/pcl_config.h
  /usr/include/pcl-1.7/pcl/pcl_exports.h

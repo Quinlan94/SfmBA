@@ -1,13 +1,10 @@
-/**
- * @file SURF_FlannMatcher
- * @brief SURF detector + descriptor + FLANN Matcher
- * @author A. Huaman
- */
+
 
 
 //pcl的库头文件放在最上面，不然会出现莫名奇妙的错误
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
+#include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
@@ -53,11 +50,8 @@ using namespace boost::filesystem;
 int rx = 0, ry = 0;
 int eyex = 30, eyez = 20, atx = 100, atz = 50; 
 int eyey = -15;
-float scalar = 0.1;        //scalar of converting pixel color to float coordinates 
+
 vector<CloudPoint> pointcloud;
-float allx = 0.0;
-float ally = 0.0;
-float allz = 0.0;
 
 typedef pcl::PointXYZ Point_PCL;
 typedef pcl::PointCloud<Point_PCL> PointCloud;
@@ -190,14 +184,13 @@ int main( int argc, char** argv )
                             0,1,0,0,
                             0,0,1,0,
                             0,0,0,1);
-    cout << "Testing P1_trans " << endl << P1_trans << endl;
 
     P= Matx34d(1,0,0,0,
                0,1,0,0,
                0,0,1,0);
 
     Mat v_K,v_Kinv,v_discoeff;
-    v_K = ( Mat_<double> ( 3,3 ) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1 );
+    v_K = ( Mat_<double> ( 3,3 ) << 2905.88, 0, 1416, 0, 2905.88, 1064, 0, 0, 1  );
     v_discoeff = ( Mat_<double> ( 5,1 ) << 0, 0, 0, 0, 0 );
 
 
@@ -207,8 +200,8 @@ int main( int argc, char** argv )
         FeatureMatching(images[i],images[i+1],keypoints[i],keypoints[i+1],
                         keypoints_good[i],keypoints_good[i+1],&v_matches[i],1);
         vector<v_point> pts(n);
-        vector<int> kp_idx__temp;
-        set<int> kp_depth_idx,kp_depth_good_idx;
+        vector<int> kp_idx__temp,kp_good_depth_idx;
+        set<int> kp_depth_idx;
 
         vector<uchar> status;
         vector<v_keypoint> imgpts_tmp(n),imgpts_good(n);
@@ -220,6 +213,7 @@ int main( int argc, char** argv )
         cv::minMaxIdx(pts[i],&minVal,&maxVal);
 
         Mat F = findFundamentalMat(pts[i], pts[i+1], FM_RANSAC, 0.006*maxVal, 0.99, status);
+        cout << "F keeping " << countNonZero(status) << " / " << status.size() << endl;
 
         for (unsigned int j=0; j<status.size(); j++)
         {
@@ -229,6 +223,7 @@ int main( int argc, char** argv )
                 imgpts_good[i+1].push_back(imgpts_tmp[i+1][j]);
 
                 kp_depth_idx.insert(kp_idx__temp[j]);
+                kp_good_depth_idx.push_back(kp_idx__temp[j]);
 
                 v_new_matches.push_back(v_matches[i][j]);
 
@@ -236,10 +231,20 @@ int main( int argc, char** argv )
             }
         }
 		v_matches[i] = v_new_matches;
+
+//        Mat img_matches;
+//        drawMatches( images[i], keypoints[i], images[i+1], keypoints[i+1],
+//                     v_matches[i], img_matches, Scalar::all(-1), Scalar::all(-1),
+//                     vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+//        //-- Show detected matches
+//        imshow( "Feature Matches", img_matches );
+//        waitKey(30);
+//        destroyWindow("Feature Matches");
+//        imwrite("Image_Matches.jpg",img_matches);
         if(!images_pair_is_initial)
         {
-            Point2d principal_point(325.1,249.7);
-            int focal_length = 521;
+            Point2d principal_point(1416, 1064);
+            double focal_length = 2905.88;
             Mat essential_matrix;
             essential_matrix = findEssentialMat(pts[i],pts[i+1],focal_length,principal_point,RANSAC);
             cout << "E: "<<essential_matrix<<endl;
@@ -256,10 +261,11 @@ int main( int argc, char** argv )
             Matx34d P1;
 
             v_Kinv = v_K.inv();
-            P1_temp = Mat_<double>(4,4)<<(R(0,0),	R(0,1),	R(0,2),	t(0),
+            P1_temp = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
                                           R(1,0),	R(1,1),	R(1,2),	t(1),
                                           R(2,0),	R(2,1),	R(2,2),	t(2),
                                           0 ,         0,     0,      1);
+            cout << "Testing P1_temp " << endl << P1_temp << endl;
 
 
             P1_trans = P1_trans * P1_temp;
@@ -271,7 +277,7 @@ int main( int argc, char** argv )
             cout << "Testing P " << endl << P << endl;
             cout << "Testing P1 " << endl << P1 << endl;
             FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
-                                         imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_good_idx);
+                                         imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_idx);
             for(int i=0;i<pointcloud.size();i++ )
             {
                 Point_PCL p;
@@ -281,7 +287,8 @@ int main( int argc, char** argv )
 
                 pointCloud_PCL->points.push_back( p );
             }
-            pointcloud.clear();
+            //kp_depth_idx.clear();
+            //pointcloud.clear();
             images_pair_is_initial = true;
 
         } else{
@@ -290,15 +297,18 @@ int main( int argc, char** argv )
             vector<Point2d> pts_2d;
             for (DMatch m:v_matches[i])
             {
-                if(kp_depth_idx.find(m.queryIdx)==kp_depth_idx.end())
+                if(kp_depth_idx.find(m.queryIdx)!=kp_depth_idx.end())
                 {
-                    pts_3d.push_back(pointcloud[i].pt);
+                    vector<int>::iterator it = lower_bound(kp_good_depth_idx.begin(),kp_good_depth_idx.end(),m.queryIdx);
+                    int index = distance(kp_good_depth_idx.begin(),it);
+                    pts_3d.push_back(pointcloud[index].pt);
                     pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);
 
 
 
                 }
             }
+            pointcloud.clear();
             cout<<"3d-2d pairs: "<<pts_3d.size() <<endl;
             Mat r;
             Mat_<double> R(3,3);
@@ -316,7 +326,7 @@ int main( int argc, char** argv )
             Matx34d P1;
 
             v_Kinv = v_K.inv();
-            P1_temp = Mat_<double>(4,4)<<(R(0,0),	R(0,1),	R(0,2),	t(0),
+            P1_temp = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
                                           R(1,0),	R(1,1),	R(1,2),	t(1),
                                           R(2,0),	R(2,1),	R(2,2),	t(2),
                                           0 ,         0,     0,      1);
@@ -327,7 +337,7 @@ int main( int argc, char** argv )
 
 
             FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
-                               imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_good_idx);
+                               imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_idx);
             for(int i=0;i<pointcloud.size();i++ )
             {
                 Point_PCL p;
@@ -463,6 +473,7 @@ int main( int argc, char** argv )
 #endif
     pointCloud_PCL->is_dense = false;
     cout<<"点云共有"<<pointCloud_PCL->size()<<"个点."<<endl;
+
     pcl::io::savePCDFileBinary("../pointCloud_PCL.pcd", *pointCloud_PCL );
 
 

@@ -161,7 +161,7 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 	Mat T1 = (Mat_<double>(3,4)<<1,0,0,0,
 	                             0,1,0,0,
 	                             0,0,1,0);
-	cout<< "T1: "<<T1<<endl;
+	//cout<< "T1: "<<T1<<endl;
 	Mat T2 = (Mat_<double>(3,4)<<P1(0,0),P1(0,1),P1(0,2),P1(0,3),
 			                     P1(1,0),P1(1,1),P1(1,2),P1(1,3),
 			                     P1(2,0),P1(2,1),P1(2,2),P1(2,3));
@@ -173,7 +173,7 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 	Mat t0 = (Mat_<double>(3,1)<<P1(0,3),P1(1,3),P1(2,3));
 
 
-	cout<< "T2: "<<T2<<endl;
+	//cout<< "T2: "<<T2<<endl;
 
 
 

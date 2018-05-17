@@ -79,7 +79,7 @@ bool FindCameraMatrices(const Mat& K,
 //    P = Matx34d(1,0,0,0,
 //                0,1,0,0,
 //                0,0,1,0);
-	cout << "Testing P1 " << endl << P1 << endl;
+	//cout << "Testing P1 " << endl << P1 << endl;
 
 	vector<CloudPoint> pcloud,pcloud1; 
 	vector<KeyPoint> corresp;
@@ -87,7 +87,7 @@ bool FindCameraMatrices(const Mat& K,
 	double reproj_error1 = TriangulatePoints(imgpts1_good,imgpts2_good,K,Kinv,P,P1,pcloud,corresp,discoeff);
 	double reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,P,pcloud1,corresp,discoeff);
 	vector<uchar> tmp_status;
-    /*
+/*
 	if (!TestTriangulation(pcloud,P1,tmp_status) || !TestTriangulation(pcloud1,P,tmp_status) || reproj_error1 > 100.0 || reproj_error2 > 100.0) 
 	{
 				P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t2(0),
