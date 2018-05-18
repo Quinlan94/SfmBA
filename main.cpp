@@ -175,12 +175,14 @@ int main( int argc, char** argv )
 #if 1
     int n = images.size();
     vector<v_keypoint> keypoints(n),keypoints_good(n);//嵌套容器要初始化，不然内存出错
-    vector<v_match> v_matches(n);
+    vector<v_match> v_matches(n-1);
     vector<DMatch> v_new_matches;
+    vector<Mat> P_muti;
 
-    Mat P1_trans;
+
+    vector<Mat> P1_trans(n-1);
     Matx34d P;
-    P1_trans = (Mat_<double>(4,4)<<1,0,0,0,
+    P1_trans[0] = (Mat_<double>(4,4)<<1,0,0,0,
                             0,1,0,0,
                             0,0,1,0,
                             0,0,0,1);
@@ -194,14 +196,17 @@ int main( int argc, char** argv )
     v_discoeff = ( Mat_<double> ( 5,1 ) << 0, 0, 0, 0, 0 );
 
 
+    vector<v_point> pts(n);
+    vector<vector<int>> kp_good_depth_idx(n-1);
+    vector<set<int>> kp_depth_idx(n-1);
+
+
     for(int i = 0;i<images.size()-1;i++)
     {
 
         FeatureMatching(images[i],images[i+1],keypoints[i],keypoints[i+1],
                         keypoints_good[i],keypoints_good[i+1],&v_matches[i],1);
-        vector<v_point> pts(n);
-        vector<int> kp_idx__temp,kp_good_depth_idx;
-        set<int> kp_depth_idx;
+        vector<int> kp_idx__temp;
 
         vector<uchar> status;
         vector<v_keypoint> imgpts_tmp(n),imgpts_good(n);
@@ -222,8 +227,8 @@ int main( int argc, char** argv )
                 imgpts_good[i].push_back(imgpts_tmp[i][j]);
                 imgpts_good[i+1].push_back(imgpts_tmp[i+1][j]);
 
-                kp_depth_idx.insert(kp_idx__temp[j]);
-                kp_good_depth_idx.push_back(kp_idx__temp[j]);
+                kp_depth_idx[i].insert(kp_idx__temp[j]);
+                kp_good_depth_idx[i].push_back(kp_idx__temp[j]);
 
                 v_new_matches.push_back(v_matches[i][j]);
 
@@ -231,6 +236,7 @@ int main( int argc, char** argv )
             }
         }
 		v_matches[i] = v_new_matches;
+        v_new_matches.clear();
 
 //        Mat img_matches;
 //        drawMatches( images[i], keypoints[i], images[i+1], keypoints[i+1],
@@ -265,19 +271,19 @@ int main( int argc, char** argv )
                                           R(1,0),	R(1,1),	R(1,2),	t(1),
                                           R(2,0),	R(2,1),	R(2,2),	t(2),
                                           0 ,         0,     0,      1);
-            cout << "Testing P1_temp: " << P1_temp << endl;
+            cout << " P1_temp: " << P1_temp << endl;
 
 
-            P1_trans = P1_trans * P1_temp;
+            P1_trans[i] = P1_trans[i] * P1_temp;
 
-            cout << "Testing P1_trans " << endl << P1_trans << endl;
-            P1 = Matx34d (P1_trans.at<double>(0,0),	P1_trans.at<double>(0,1),	P1_trans.at<double>(0,2),	P1_trans.at<double>(0,3),
-                         P1_trans.at<double>(1,0),	P1_trans.at<double>(1,1),	P1_trans.at<double>(1,2),	P1_trans.at<double>(1,3),
-                         P1_trans.at<double>(2,0),	P1_trans.at<double>(2,1),	P1_trans.at<double>(2,2),	P1_trans.at<double>(2,3));
-            cout << "Testing P " << endl << P << endl;
-            cout << "Testing P1 " << endl << P1 << endl;
+            cout << " P1_trans " << endl << P1_trans[i] << endl;
+            P1 = Matx34d (P1_trans[i].at<double>(0,0),	P1_trans[i].at<double>(0,1),	P1_trans[i].at<double>(0,2),	P1_trans[i].at<double>(0,3),
+                         P1_trans[i].at<double>(1,0),	P1_trans[i].at<double>(1,1),	P1_trans[i].at<double>(1,2),	P1_trans[i].at<double>(1,3),
+                         P1_trans[i].at<double>(2,0),	P1_trans[i].at<double>(2,1),	P1_trans[i].at<double>(2,2),	P1_trans[i].at<double>(2,3));
+
+            cout << " P1 " << endl << P1 << endl;
             FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
-                                         imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_idx);
+                                         imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_idx[i]);
             for(int i=0;i<pointcloud.size();i++ )
             {
                 Point_PCL p;
@@ -287,31 +293,37 @@ int main( int argc, char** argv )
 
                 pointCloud_PCL->points.push_back( p );
             }
-            //kp_depth_idx.clear();
-            //pointcloud.clear();
+
             images_pair_is_initial = true;
 
         } else{
 
             vector<Point3d> pts_3d;
             vector<Point2d> pts_2d;
+
             for (DMatch m:v_matches[i])
             {
-                if(kp_depth_idx.find(m.queryIdx)!=kp_depth_idx.end())
+                vector<int>::iterator it;
+                for (it = kp_good_depth_idx[i-1].begin();it!= kp_good_depth_idx[i-1].end();it++)
                 {
-                    vector<int>::iterator it = lower_bound(kp_good_depth_idx.begin(),kp_good_depth_idx.end(),m.queryIdx);
-                    int index = distance(kp_good_depth_idx.begin(),it);
-                    pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,P1_trans));
-                    pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);
+                    if(*it == m.queryIdx)
+                    {
+                        int index = distance(kp_good_depth_idx[i-1].begin(),it);
+                        pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,P1_trans[i-1]));//可以考虑筛选一些重投影误差较大 点
+                        pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);
+                        break;
 
+                    }
                 }
+
+
             }
             pointcloud.clear();
             cout<<"3d-2d pairs: "<<pts_3d.size() <<endl;
             Mat r;
             Mat_<double> R(3,3);
             Mat_<double> t(1,3);
-            solvePnP ( pts_3d, pts_2d, v_K, Mat(), r, t, false );
+            solvePnP ( pts_3d, pts_2d, v_K, Mat(), r, t, false );//筛选后的点是否效果明显
 
             cv::Rodrigues ( r, R );
 
@@ -335,7 +347,7 @@ int main( int argc, char** argv )
 //
 
             FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
-                               imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_idx);
+                               imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,kp_depth_idx[i]);
             for(int i=0;i<pointcloud.size();i++ )
             {
                 Point_PCL p;
@@ -345,12 +357,10 @@ int main( int argc, char** argv )
 
                 pointCloud_PCL->points.push_back( p );
             }
+
+            kp_idx__temp.clear();
             pointcloud.clear();
         }
-
-
-
-
 
     }
 

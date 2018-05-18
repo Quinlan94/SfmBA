@@ -70,6 +70,11 @@ cv::Point3d FirstFrame2Second(cv::Point3d point,Mat P)
 	return  point;
 
 }
+cv::Point3d CurrentPt2World(cv::Point3d,std::vector<cv::Mat> P1,int count)
+{
+
+}
+
 
 
 
