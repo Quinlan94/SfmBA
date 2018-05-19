@@ -70,8 +70,24 @@ cv::Point3d FirstFrame2Second(cv::Point3d point,Mat P)
 	return  point;
 
 }
-cv::Point3d CurrentPt2World(cv::Point3d,std::vector<cv::Mat> P1,int count)
+cv::Point3d CurrentPt2World(cv::Point3d point,std::vector<cv::Mat> P1_trans,int count)
 {
+    Mat Pw = (Mat_<double>(4,4)<<1,0,0,0,
+                                 0,1,0,0,
+                                 0,0,1,0,
+                                 0,0,0,1);
+    //cout << "Testing Pw " << Pw << endl;
+
+    for (int i = 0; i < count; ++i) {
+
+        Pw = Pw *P1_trans[i];
+        //cout << "Testing Pw " << Pw << endl;
+
+    }
+
+    return  FirstFrame2Second(point,Pw.inv());
+
+
 
 }
 

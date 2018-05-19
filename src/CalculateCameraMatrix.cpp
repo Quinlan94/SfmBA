@@ -32,7 +32,7 @@ bool FindCameraMatrices(const Mat& K,
 						vector<KeyPoint>& imgpts2_good,
 						vector<DMatch>& matches,
 						vector<CloudPoint>& outCloud,
-                        std::set<int>& kp_idx)
+                        vector<double>& mean_reproj_err)
 {
     //================================================================
 //	Mat_<double> E = K.t() * F * K; // Essential Matrix
@@ -86,6 +86,7 @@ bool FindCameraMatrices(const Mat& K,
 
 	double reproj_error1 = TriangulatePoints(imgpts1_good,imgpts2_good,K,Kinv,P,P1,pcloud,corresp,discoeff);
 	double reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,P,pcloud1,corresp,discoeff);
+    mean_reproj_err.push_back((reproj_error1+reproj_error2)/2);
 	vector<uchar> tmp_status;
 /*
 	if (!TestTriangulation(pcloud,P1,tmp_status) || !TestTriangulation(pcloud1,P,tmp_status) || reproj_error1 > 100.0 || reproj_error2 > 100.0) 

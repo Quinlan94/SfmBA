@@ -21,7 +21,7 @@ bool FindCameraMatrices(const Mat& K,
 						vector<KeyPoint>& imgpts2_good,
 						vector<DMatch>& matches,
 						vector<CloudPoint>& outCloud,
-                        std::set<int>& kp_idx);
+                        vector<double>& mean_reproj_err);
 
 
 

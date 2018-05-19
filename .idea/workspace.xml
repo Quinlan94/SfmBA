@@ -14,69 +14,14 @@
   <component name="ChangeListManager">
     <list default="true" id="405216a3-db70-4d4b-bab7-d86242700916" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeCache.txt" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CMakeCCompiler.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CMakeCXXCompiler.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CMakeDetermineCompilerABI_C.bin" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CMakeDetermineCompilerABI_CXX.bin" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CMakeSystem.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CompilerIdC/a.out" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/3.5.1/CompilerIdCXX/a.out" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/CMakeDirectoryInformation.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/CMakeError.log" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/CMakeOutput.log" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/Makefile.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/Makefile2" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/TargetDirectories.txt" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/cmake.check_cache" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/feature_tests.bin" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/feature_tests.c" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/feature_tests.cxx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/progress.marks" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/sfm.dir/DependInfo.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/sfm.dir/build.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/sfm.dir/cmake_clean.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/sfm.dir/depend.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/sfm.dir/flags.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/sfm.dir/link.txt" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/CMakeFiles/sfm.dir/progress.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/Makefile" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/cmake_install.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/CMakeDirectoryInformation.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/mysfm.dir/DependInfo.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/mysfm.dir/build.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/mysfm.dir/cmake_clean.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/mysfm.dir/depend.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/mysfm.dir/flags.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/mysfm.dir/link.txt" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/mysfm.dir/progress.make" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/CMakeFiles/progress.marks" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/Makefile" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/src/cmake_install.cmake" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/DependInfo.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/DependInfo.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/build.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/build.make" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/flags.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/flags.make" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/link.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/link.txt" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/main.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/sfm.dir/main.cpp.o" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/SFM.cbp" afterPath="$PROJECT_DIR$/cmake-build-debug/SFM.cbp" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/sfm" afterPath="$PROJECT_DIR$/cmake-build-debug/sfm" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/Common.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/Common.cpp.o" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/DependInfo.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/DependInfo.cmake" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/build.make" afterPath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/build.make" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/flags.make" afterPath="$PROJECT_DIR$/cmake-build-debug/src/CMakeFiles/mysfm.dir/flags.make" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/src/Makefile" afterPath="$PROJECT_DIR$/cmake-build-debug/src/Makefile" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/src/libmysfm.so" afterPath="$PROJECT_DIR$/cmake-build-debug/src/libmysfm.so" />
+      <change beforePath="$PROJECT_DIR$/Images/100_7103.JPG" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/include/CalculateCameraMatrix.h" afterPath="$PROJECT_DIR$/include/CalculateCameraMatrix.h" />
       <change beforePath="$PROJECT_DIR$/include/Common.h" afterPath="$PROJECT_DIR$/include/Common.h" />
       <change beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
       <change beforePath="$PROJECT_DIR$/pointCloud_PCL.pcd" afterPath="$PROJECT_DIR$/pointCloud_PCL.pcd" />
+      <change beforePath="$PROJECT_DIR$/src/CalculateCameraMatrix.cpp" afterPath="$PROJECT_DIR$/src/CalculateCameraMatrix.cpp" />
       <change beforePath="$PROJECT_DIR$/src/Common.cpp" afterPath="$PROJECT_DIR$/src/Common.cpp" />
+      <change beforePath="$PROJECT_DIR$/src/FeatureMatching.cpp" afterPath="$PROJECT_DIR$/src/FeatureMatching.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -92,32 +37,25 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1947">
-              <caret line="314" column="0" lean-forward="false" selection-start-line="310" selection-start-column="0" selection-end-line="314" selection-end-column="0" />
+            <state relative-caret-position="2106">
+              <caret line="293" column="32" lean-forward="false" selection-start-line="293" selection-start-column="32" selection-end-line="293" selection-end-column="32" />
               <folding>
                 <element signature="e#32#60#0" expanded="true" />
-                <element signature="e#1214#3370#0" expanded="false" />
+                <element signature="e#1184#3340#0" expanded="false" />
+                <element signature="e#12725#16167#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="calib3d.hpp" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/include/opencv2/calib3d.hpp">
+      <file leaf-file-name="FeatureMatching.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/FeatureMatching.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="693" column="77" lean-forward="false" selection-start-line="693" selection-start-column="77" selection-end-line="693" selection-end-column="77" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mat.inl.hpp" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/include/opencv2/core/mat.inl.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="491" column="0" lean-forward="false" selection-start-line="491" selection-start-column="0" selection-end-line="491" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="799">
+              <caret line="156" column="6" lean-forward="false" selection-start-line="156" selection-start-column="6" selection-end-line="156" selection-end-column="6" />
+              <folding>
+                <element signature="e#0#34#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -125,8 +63,8 @@
       <file leaf-file-name="Common.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/include/Common.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="32" column="37" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+            <state relative-caret-position="270">
+              <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -135,8 +73,8 @@
       <file leaf-file-name="Common.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Common.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="431">
-              <caret line="72" column="55" lean-forward="false" selection-start-line="72" selection-start-column="55" selection-end-line="72" selection-end-column="55" />
+            <state relative-caret-position="611">
+              <caret line="73" column="1" lean-forward="false" selection-start-line="73" selection-start-column="1" selection-end-line="73" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -145,8 +83,8 @@
       <file leaf-file-name="Triangulation.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Triangulation.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-109">
-              <caret line="198" column="21" lean-forward="false" selection-start-line="198" selection-start-column="21" selection-end-line="198" selection-end-column="21" />
+            <state relative-caret-position="486">
+              <caret line="224" column="16" lean-forward="false" selection-start-line="224" selection-start-column="16" selection-end-line="224" selection-end-column="16" />
               <folding>
                 <element signature="e#9565#11206#0" expanded="false" />
               </folding>
@@ -157,7 +95,7 @@
       <file leaf-file-name="core.hpp" pinned="false" current-in-tab="false">
         <entry file="file:///usr/local/include/opencv2/core.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="515">
+            <state relative-caret-position="15210">
               <caret line="845" column="0" lean-forward="false" selection-start-line="845" selection-start-column="0" selection-end-line="845" selection-end-column="0" />
               <folding />
             </state>
@@ -167,8 +105,8 @@
       <file leaf-file-name="CalculateCameraMatrix.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/CalculateCameraMatrix.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2412">
-              <caret line="134" column="13" lean-forward="false" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
+            <state relative-caret-position="269">
+              <caret line="30" column="52" lean-forward="false" selection-start-line="30" selection-start-column="52" selection-end-line="30" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -177,8 +115,8 @@
       <file leaf-file-name="CalculateCameraMatrix.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/include/CalculateCameraMatrix.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+            <state relative-caret-position="360">
+              <caret line="23" column="35" lean-forward="false" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -220,12 +158,12 @@
         <option value="$PROJECT_DIR$/include/fed.h" />
         <option value="$PROJECT_DIR$/include/Triangulation - Copy.h" />
         <option value="$PROJECT_DIR$/src/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/FeatureMatching.cpp" />
         <option value="$PROJECT_DIR$/src/Triangulation.cpp" />
-        <option value="$PROJECT_DIR$/include/CalculateCameraMatrix.h" />
-        <option value="$PROJECT_DIR$/src/CalculateCameraMatrix.cpp" />
         <option value="$PROJECT_DIR$/include/Common.h" />
         <option value="$PROJECT_DIR$/src/Common.cpp" />
+        <option value="$PROJECT_DIR$/include/CalculateCameraMatrix.h" />
+        <option value="$PROJECT_DIR$/src/CalculateCameraMatrix.cpp" />
+        <option value="$PROJECT_DIR$/src/FeatureMatching.cpp" />
         <option value="$PROJECT_DIR$/main.cpp" />
       </list>
     </option>
@@ -237,11 +175,11 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="121" />
-    <option name="y" value="68" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="208" />
+    <option name="y" value="149" />
     <option name="width" value="1617" />
-    <option name="height" value="1012" />
+    <option name="height" value="984" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -285,7 +223,7 @@
   <component name="PropertiesComponent">
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../slambook-master/project/0.1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
   </component>
   <component name="RunDashboard">
@@ -358,27 +296,27 @@
       <workItem from="1526517178421" duration="7622000" />
       <workItem from="1526560987247" duration="2267000" />
       <workItem from="1526563347094" duration="3921000" />
-      <workItem from="1526621047358" duration="11730000" />
+      <workItem from="1526621047358" duration="12127000" />
+      <workItem from="1526692920970" duration="15561000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="187457000" />
+    <option name="totallyTimeSpent" value="203415000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="7" />
-    <editor active="true" />
+    <frame x="208" y="149" width="1617" height="984" extended-state="1" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24043126" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23995052" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3955148" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39500567" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3277405" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23751274" sideWeight="0.5018868" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23751274" sideWeight="0.49811321" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2644722" sideWeight="0.49811321" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997763" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35474005" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35414302" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -391,22 +329,22 @@
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36391437" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3955148" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.327787" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3277405" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23751274" sideWeight="0.5018868" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3282365" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23751274" sideWeight="0.49811321" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997763" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24959569" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20916443" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3212321" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35474005" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37206933" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,19 +372,24 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/main.cpp</url>
-          <line>423</line>
+          <line>460</line>
           <option name="timeStamp" value="65" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/Common.cpp</url>
-          <line>61</line>
-          <option name="timeStamp" value="77" />
+          <line>74</line>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/main.cpp</url>
+          <line>208</line>
+          <option name="timeStamp" value="85" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="78" />
+      <option name="time" value="86" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
@@ -458,6 +401,8 @@
         <watch expression="kp_depth_idx" />
         <watch expression="pts_3d" />
         <watch expression="pts_2d" />
+        <watch expression="each_mean_reproj_error" />
+        <watch expression="pointcloud" />
       </configuration>
     </watches-manager>
   </component>
@@ -492,7 +437,8 @@
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding>
             <element signature="e#32#60#0" expanded="true" />
-            <element signature="e#1214#3370#0" expanded="false" />
+            <element signature="e#1184#3340#0" expanded="false" />
+            <element signature="e#12725#16167#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -598,24 +544,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/src/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="189" column="0" lean-forward="false" selection-start-line="189" selection-start-column="0" selection-end-line="189" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/build/src/Makefile" />
     <entry file="file:///usr/local/include/opencv2/imgcodecs.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
           <caret line="172" column="35" lean-forward="false" selection-start-line="172" selection-start-column="35" selection-end-line="172" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/include/opencv2/features2d.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="154" column="0" lean-forward="false" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -663,33 +596,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/FeatureMatching.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="558">
-          <caret line="58" column="10" lean-forward="false" selection-start-line="58" selection-start-column="10" selection-end-line="58" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/CalculateCameraMatrix.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/include/FeatureMatching.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="19" column="19" lean-forward="true" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/include/ArcBall.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="432">
           <caret line="24" column="23" lean-forward="false" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -700,34 +610,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CalculateCameraMatrix.cpp">
+    <entry file="file:///usr/local/include/opencv2/core.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2412">
-          <caret line="134" column="13" lean-forward="false" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
+        <state relative-caret-position="15210">
+          <caret line="845" column="0" lean-forward="false" selection-start-line="845" selection-start-column="0" selection-end-line="845" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/include/opencv2/core.hpp">
+    <entry file="file:///usr/local/include/opencv2/calib3d.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="515">
-          <caret line="845" column="0" lean-forward="false" selection-start-line="845" selection-start-column="0" selection-end-line="845" selection-end-column="0" />
+        <state relative-caret-position="12474">
+          <caret line="693" column="77" lean-forward="false" selection-start-line="693" selection-start-column="77" selection-end-line="693" selection-end-column="77" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/local/include/opencv2/core/mat.inl.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="491" column="0" lean-forward="false" selection-start-line="491" selection-start-column="0" selection-end-line="491" selection-end-column="0" />
+        <state relative-caret-position="198">
+          <caret line="3299" column="2" lean-forward="false" selection-start-line="3299" selection-start-column="2" selection-end-line="3299" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Triangulation.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-109">
-          <caret line="198" column="21" lean-forward="false" selection-start-line="198" selection-start-column="21" selection-end-line="198" selection-end-column="21" />
+        <state relative-caret-position="486">
+          <caret line="224" column="16" lean-forward="false" selection-start-line="224" selection-start-column="16" selection-end-line="224" selection-end-column="16" />
           <folding>
             <element signature="e#9565#11206#0" expanded="false" />
           </folding>
@@ -736,35 +646,70 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/include/Common.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="32" column="37" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        <state relative-caret-position="270">
+          <caret line="20" column="10" lean-forward="false" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/include/opencv2/calib3d.hpp">
+    <entry file="file://$PROJECT_DIR$/include/CalculateCameraMatrix.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="693" column="77" lean-forward="false" selection-start-line="693" selection-start-column="77" selection-end-line="693" selection-end-column="77" />
+        <state relative-caret-position="360">
+          <caret line="23" column="35" lean-forward="false" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="37" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Common.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="72" column="55" lean-forward="false" selection-start-line="72" selection-start-column="55" selection-end-line="72" selection-end-column="55" />
+        <state relative-caret-position="611">
+          <caret line="73" column="1" lean-forward="false" selection-start-line="73" selection-start-column="1" selection-end-line="73" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/include/opencv2/features2d.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="894" column="0" lean-forward="false" selection-start-line="894" selection-start-column="0" selection-end-line="894" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/FeatureMatching.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="799">
+          <caret line="156" column="6" lean-forward="false" selection-start-line="156" selection-start-column="6" selection-end-line="156" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/FeatureMatching.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CalculateCameraMatrix.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="30" column="52" lean-forward="false" selection-start-line="30" selection-start-column="52" selection-end-line="30" selection-end-column="52" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1947">
-          <caret line="314" column="0" lean-forward="false" selection-start-line="310" selection-start-column="0" selection-end-line="314" selection-end-column="0" />
+        <state relative-caret-position="2106">
+          <caret line="293" column="32" lean-forward="false" selection-start-line="293" selection-start-column="32" selection-end-line="293" selection-end-column="32" />
           <folding>
             <element signature="e#32#60#0" expanded="true" />
-            <element signature="e#1214#3370#0" expanded="false" />
+            <element signature="e#1184#3340#0" expanded="false" />
+            <element signature="e#12725#16167#0" expanded="true" />
           </folding>
         </state>
       </provider>
