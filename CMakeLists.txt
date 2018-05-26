@@ -8,6 +8,7 @@ set( CMAKE_CXX_FLAGS "-std=c++11" )
 find_package( OpenCV REQUIRED )
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(Ceres REQUIRED)
 
 #这个库好像有点问题
 find_package(PCL REQUIRED COMPONET common io)
@@ -18,8 +19,10 @@ list (REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories( ${PROJECT_SOURCE_DIR}/include )
 include_directories(/usr/include/eigen3)
+
 add_subdirectory(src)
+
 
 add_executable( sfm main.cpp )
 
-target_link_libraries( sfm mysfm ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${PCL_LIBRARIES})
+target_link_libraries( sfm mysfm ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${PCL_LIBRARIES} ${CERES_LIBRARIES})

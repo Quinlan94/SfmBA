@@ -12,12 +12,15 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+
 #include "opencv2/core/core.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <opencv2/calib3d/calib3d.hpp>
 
-#include <opencv2/core/core.hpp>
+
 
 #include <boost/filesystem.hpp>
 
@@ -53,13 +56,11 @@ int eyey = -15;
 
 
 
-typedef pcl::PointXYZ Point_PCL;
+typedef pcl::PointXYZRGB Point_PCL;
 typedef pcl::PointCloud<Point_PCL> PointCloud;
 
 vector<Mat> images;
-typedef vector<KeyPoint> v_keypoint;
-typedef vector<DMatch> v_match;
-typedef vector<Point2f> v_point;
+
 
 bool images_pair_is_initial = false;
 
@@ -196,18 +197,16 @@ int main( int argc, char** argv )
 
 
     vector<v_point> pts(n);
-    vector<vector<int>> kp_good_depth_idx(n-1);
+    vector<v_pair> kp_good_depth_idx(n-1);
     vector<double> each_mean_reproj_error;
-    vector<set<int>> kp_depth_idx(n-1);
-
+    unordered_set<int> kp_depth_idx;
 
     for(int i = 0;i<images.size()-1;i++)
     {
 
         FeatureMatching(images[i],images[i+1],keypoints[i],keypoints[i+1],
                         keypoints_good[i],keypoints_good[i+1],&v_matches[i],1);
-        vector<int> kp_idx__temp;
-
+        vector<pair<int,int>> kp_idx__temp;
         vector<uchar> status;
         vector<v_keypoint> imgpts_tmp(n),imgpts_good(n);
         GetAlignedPointsFromMatch(keypoints[i], keypoints[i+1], v_matches[i],
@@ -229,7 +228,7 @@ int main( int argc, char** argv )
                 imgpts_good[i].push_back(imgpts_tmp[i][j]);
                 imgpts_good[i+1].push_back(imgpts_tmp[i+1][j]);
 
-                kp_depth_idx[i].insert(kp_idx__temp[j]);
+                kp_depth_idx.insert(kp_idx__temp[j].second);
                 kp_good_depth_idx[i].push_back(kp_idx__temp[j]);
 
                 v_new_matches.push_back(v_matches[i][j]);
@@ -239,7 +238,7 @@ int main( int argc, char** argv )
         }
 		v_matches[i] = v_new_matches;
         v_new_matches.clear();
-
+/*
 //        Mat img_matches;
 //        drawMatches( images[i], keypoints[i], images[i+1], keypoints[i+1],
 //                     v_matches[i], img_matches, Scalar::all(-1), Scalar::all(-1),
@@ -249,6 +248,7 @@ int main( int argc, char** argv )
 //        waitKey(30);
 //        destroyWindow("Feature Matches");
 //        imwrite("Image_Matches.jpg",img_matches);
+ */
         if(!images_pair_is_initial)
         {
             Point2d principal_point(1416, 1064);
@@ -264,7 +264,6 @@ int main( int argc, char** argv )
             cout <<"R: "<<R<<endl;
             cout <<"t: "<<t<<endl;
 
-
             Mat P1_temp;
             Matx34d P1;
 
@@ -274,11 +273,8 @@ int main( int argc, char** argv )
                                           R(2,0),	R(2,1),	R(2,2),	t(2),
                                           0 ,         0,     0,      1);
             cout << " P1_temp: " << P1_temp << endl;
-
-
             P1_trans[i] = P1_trans[i] * P1_temp;
 
-            cout << " P1_trans " << endl << P1_trans[i] << endl;
             P1 = Matx34d (P1_trans[i].at<double>(0,0),	P1_trans[i].at<double>(0,1),	P1_trans[i].at<double>(0,2),	P1_trans[i].at<double>(0,3),
                          P1_trans[i].at<double>(1,0),	P1_trans[i].at<double>(1,1),	P1_trans[i].at<double>(1,2),	P1_trans[i].at<double>(1,3),
                          P1_trans[i].at<double>(2,0),	P1_trans[i].at<double>(2,1),	P1_trans[i].at<double>(2,2),	P1_trans[i].at<double>(2,3));
@@ -286,6 +282,7 @@ int main( int argc, char** argv )
             cout << " P1 " << endl << P1 << endl;
             FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
                                imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,each_mean_reproj_error);
+            BundleAdjustment(keypoints[i+1],kp_good_depth_idx[i],R,v_K,t,pointcloud);
             int k = 0;
             for(int j=0;j<pointcloud.size();j++ )
             {
@@ -295,57 +292,54 @@ int main( int argc, char** argv )
                     p.x = pointcloud[j].pt.x;
                     p.y = pointcloud[j].pt.y;
                     p.z = pointcloud[j].pt.z;
+                    p.r= 255;
+                    p.g=255;
+                    p.b= 255;
 
                     pointCloud_PCL->points.push_back( p );
                     k++;
-
                 }
-
-
             }
             cout<<i<<"次点云共有"<<k<<"个点."<<endl;
             k= 0;
             images_pair_is_initial = true;
 
-        } else{
+        }
+        else
+        {
 
             vector<Point3d> pts_3d;
             vector<Point2d> pts_2d;
 
             for (DMatch m:v_matches[i])
             {
-                vector<int>::iterator it;
-                if(!(kp_depth_idx[i-1].find(m.queryIdx) == kp_depth_idx[i-1].end()))
+                vector<pair<int,int>>::iterator it;
+                if(!(kp_depth_idx.find(m.queryIdx) == kp_depth_idx.end()))//避免每次从头到尾的遍历
                 {
                     for (it = kp_good_depth_idx[i-1].begin();it!= kp_good_depth_idx[i-1].end();it++)
                     {
-                        if(*it == m.queryIdx)
+                        if(it->second == m.queryIdx)//当前匹配对的第一副图是否在上一匹配对中计算过深度
                         {
-                            int index = distance(kp_good_depth_idx[i-1].begin(),it);
-                            //if(pointcloud[index].reprojection_error< each_mean_reproj_error[i-1])
-                            {
+                            int index = distance(kp_good_depth_idx[i-1].begin(),it);//索引位置对应点云位置，即对应的深度
+
                                 pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,P1_trans[i-1]));//可以考虑筛选一些重投影误差较大点
                                 pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);//然而并没有什么屁用，反而更差。
 
                                 break;
-
-                            }
-
                         }
                     }
                 }
-
-
-
             }
             pointcloud.clear();
             cout<<"3d-2d pairs: "<<pts_3d.size() <<endl;
             Mat r;
             Mat_<double> R(3,3);
-            Mat_<double> t(1,3);
+            Mat_<double> t(3,1);
             solvePnP ( pts_3d, pts_2d, v_K, Mat(), r, t, false );//筛选后的点是否效果明显,很奇怪。
+            cout<<"什么鬼: "<<r<<endl;
 
-            cv::Rodrigues ( r, R );
+            cv::Rodrigues ( r, R );//旋转向量是个3维，那旋转角度呢
+
 
             cout<<"R="<<endl<<R<<endl;
             cout<<"t="<<endl<<t<<endl;
@@ -364,20 +358,65 @@ int main( int argc, char** argv )
                                               R(2,0),	R(2,1),	R(2,2),	t(2),
                                               0,        0,      0,      1);
 
-
+/*
 //            P1_trans = P1_trans * P1_temp;
 //            P1 = Matx34d (P1_trans.at<double>(0,0),	P1_trans.at<double>(0,1),	P1_trans.at<double>(0,2),	P1_trans.at<double>(0,3),
 //                          P1_trans.at<double>(1,0),	P1_trans.at<double>(1,1),	P1_trans.at<double>(1,2),	P1_trans.at<double>(1,3),
 //                          P1_trans.at<double>(2,0),	P1_trans.at<double>(2,1),	P1_trans.at<double>(2,2),	P1_trans.at<double>(2,3));
 //
-
+*/
             FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
                                imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,each_mean_reproj_error);
+
+
             int k = 0;
+            vector<int> pre,current,differ;
+            vector<int>::iterator f;
+            for(pair<int,int> q : kp_good_depth_idx[i])
+                current.push_back(q.first);
+
+            for(pair<int,int> t : kp_good_depth_idx[i-1])
+                pre.push_back(t.second);
+            std::sort(pre.begin(),pre.end(),less<int>());
+
+            std::set_difference(current.begin(), current.end(), pre.begin(), pre.end(),
+                                std::inserter(differ, differ.begin()));//之前最好排序，不然差集可能出错
+
+            for(auto v:differ)
+            {
+                for (f = current.begin();f!= current.end();f++)
+                {
+                    if(v == *f )
+                    {
+                        int index = distance(current.begin(),f);
+                        if(pointcloud[index].reprojection_error < each_mean_reproj_error[i])
+                        {
+                            Point_PCL p;
+                            p.x = CurrentPt2World(pointcloud[index].pt, P1_trans, i).x;
+                            p.y = CurrentPt2World(pointcloud[index].pt, P1_trans, i).y;
+                            p.z = CurrentPt2World(pointcloud[index].pt, P1_trans, i).z;
+
+                            p.r= 50;
+                            p.g=255;
+                            p.b= 60;
+
+                            pointCloud_PCL->points.push_back(p);
+
+                            k++;
+                        }
+
+
+                    }
+
+                }
+
+            }
+
+/*
             for(int j=0;j<pointcloud.size();j++ )
             {
 
-                if(pointcloud[j].reprojection_error < each_mean_reproj_error[i])
+                //if(pointcloud[j].reprojection_error < each_mean_reproj_error[i])
                 {
                     Point_PCL p;
                     p.x = CurrentPt2World(pointcloud[j].pt,P1_trans,i).x;
@@ -386,17 +425,21 @@ int main( int argc, char** argv )
 //                p.x = pointcloud[i].pt.x;
 //                p.y = pointcloud[i].pt.y;
 //                p.z = pointcloud[i].pt.z;
+                    p.r= 50;
+                    p.g=255;
+                    p.b= 60;
+
 
                     pointCloud_PCL->points.push_back( p );
                     k++;
                 }
 
-            }
+            }*/
 
             kp_idx__temp.clear();
            // pointcloud.clear();
-            cout<<i<<"次点云共有"<<k<<"个点."<<endl;
-            k=0;
+            cout<<i<<"次点云共有新添加"<<k<<"个点."<<endl;
+
         }
 
     }

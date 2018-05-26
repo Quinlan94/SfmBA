@@ -93,27 +93,9 @@ void FeatureMatching(const Mat& img_1,
 		extractor->compute( img_2, keypts2, descriptors_2 );
 
 	}
-	if(method == 4) // KAZE descriptor
-	{
-		/*KAZEOptions options;
-		options.img_width = img_1.cols;
-		options.img_height = img_1.rows;
-		KAZE evolution1(options);
 
-		evolution1.Create_Nonlinear_Scale_Space(img_1);
-		evolution1.Feature_Detection(keypts1);
-		evolution1.Feature_Description(keypts1,descriptors_1);
 
-		options.img_width = img_2.cols;
-		options.img_height = img_2.rows;
-		KAZE evolution2(options);
 
-		evolution2.Create_Nonlinear_Scale_Space(img_2);
-		evolution2.Feature_Detection(keypts2);
-		evolution2.Feature_Description(keypts2,descriptors_2);*/
-	}
-
-	//-- Step 3: Matching descriptor vectors using BF matcher
 	BFMatcher matcher(NORM_L2,true);//不建议构造函数初始化，使用 BFMatcher.create()
 	std::vector< DMatch > matches_;
 	if (matches == NULL) {
@@ -143,7 +125,7 @@ void FeatureMatching(const Mat& img_1,
 		if ((*matches)[i].trainIdx <= 0) {//？？？？会有这种情况？
 			(*matches)[i].trainIdx = (*matches)[i].imgIdx;
 		}
-        //如果一个描述符在train中只出现一次，说明它没有其他的重匹配，这段nice,find函数巧妙
+        //如果一个描述符在train中只出现一次，说明它没有其他的重匹配，
 		if( existing_trainIdx.find((*matches)[i].trainIdx) == existing_trainIdx.end() && 
 			(*matches)[i].trainIdx >= 0 && (*matches)[i].trainIdx < (int)(keypts2.size()) &&
 			(*matches)[i].distance > 0.0 && (*matches)[i].distance < cutoff ) 

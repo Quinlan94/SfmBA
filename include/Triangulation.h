@@ -18,10 +18,7 @@ using namespace std;
 using namespace cv;
 
 
-namespace Eigen {
 
-    typedef Eigen::Matrix<double, 3, 4> Matrix3x4d;
-}
 
 /**
  From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997

@@ -34,13 +34,6 @@ bool FindCameraMatrices(const Mat& K,
 						vector<CloudPoint>& outCloud,
                         vector<double>& mean_reproj_err)
 {
-    //================================================================
-//	Mat_<double> E = K.t() * F * K; // Essential Matrix
-//	if(fabsf(determinant(E)) > 1e-05) {
-//		cout << "det(E) != 0 : " << determinant(E) << "\n";
-//		return false;
-//	}
-//	cout << "E method : "<<E<<endl;
 	Mat_<double> R1(3,3);
             R1= R_cv;
 	Mat_<double> R2(3,3);
@@ -49,6 +42,14 @@ bool FindCameraMatrices(const Mat& K,
            t1 = t_cv;
 	Mat_<double> t2(1,3);
    /*
+    *
+    //================================================================
+//	Mat_<double> E = K.t() * F * K; // Essential Matrix
+//	if(fabsf(determinant(E)) > 1e-05) {
+//		cout << "det(E) != 0 : " << determinant(E) << "\n";
+//		return false;
+//	}
+//	cout << "E method : "<<E<<endl;
 	SVD svd(E);
 	Matx33d W(0,-1,0,	
 		1,0,0,
@@ -70,7 +71,7 @@ bool FindCameraMatrices(const Mat& K,
 				R1(2,0),	R1(2,1),	R1(2,2),	t1(2)); // Camara Matrix
 	P = Matx34d(1,0,0,0,
 				0,1,0,0,
-				0,0,1,0);*/
+				0,0,1,0);
 
 
 //    P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t1(0),
@@ -80,7 +81,7 @@ bool FindCameraMatrices(const Mat& K,
 //                0,1,0,0,
 //                0,0,1,0);
 	//cout << "Testing P1 " << endl << P1 << endl;
-
+*/
 	vector<CloudPoint> pcloud,pcloud1; 
 	vector<KeyPoint> corresp;
 

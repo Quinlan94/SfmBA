@@ -9,7 +9,10 @@ using namespace cv;
 
 #undef __SFM__DEBUG__
 
-Point2f pixel2cam ( const Point2d& p, const Mat& K )
+Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
+                                vector<CloudPoint> &pointcloud, const vector<Point3f> &points_3d);
+
+Point2f pixel2cam (const Point2d& p, const Mat& K )
 {
     return Point2f
             (
@@ -180,7 +183,7 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 
 	cout << "Triangulating Now . . ."<<endl;
 	double t = getTickCount();
-	vector<double> reproj_error;
+
 	unsigned int pts_size = pt_set1.size();
 	
 #if 1
@@ -209,26 +212,8 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
         points_3d.push_back( p );
     }
 
-    Mat_<double> KP1 = K * Mat(P1);
-    Mat_<double> X = Mat_<double>(4,1);
-    for (int i=0; i<points_3d.size(); i++)
-    {
-        X << points_3d[i].x,points_3d[i].y,points_3d[i].z,1;
-        Mat_<double> xPt_img = KP1 * X;
-        Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
-
-        double reprj_err = norm(xPt_img_ - pt_set2[i].pt);
-        reproj_error.push_back(reprj_err);
-
-        CloudPoint cp;
-        cp.pt = Point3d(X(0), X(1), X(2));
-        cp.reprojection_error = reprj_err;
-
-        pointcloud.push_back(cp);
-        correspImg1Pt.push_back(pt_set1[i]);
-
-        depths.push_back(X(2));
-    }
+    Scalar mse = ReprojErrorAndPointCloud(pt_set2, K, P1, pointcloud, points_3d);
+    return mse[0];
 
 
 #else
@@ -311,29 +296,7 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
 		}
 	}
 #endif
-	
-	Scalar mse = mean(reproj_error);
-	t = ((double)getTickCount() - t)/getTickFrequency();
-	cout << "Done. \n\r"<<pointcloud.size()<<"points, " <<"mean square reprojetion err = " << mse[0] <<  endl;
-	
-	//show "range image"
 
-//	{
-//		double minVal,maxVal;
-//		minMaxLoc(depths, &minVal, &maxVal);
-//		Mat tmp(1224,1632,CV_8UC3,Scalar(0,0,0)); //cvtColor(img_1_orig, tmp, CV_BGR2HSV);
-//		for (unsigned int i=0; i<pointcloud.size(); i++) {
-//			double _d = MAX(MIN((pointcloud[i].pt.z-minVal)/(maxVal-minVal),1.0),0.0);
-//			circle(tmp, correspImg1Pt[i].pt, 1, Scalar(255 * (1.0-(_d)),255,255), CV_FILLED);
-//		}
-//		cvtColor(tmp, tmp, CV_HSV2BGR);
-////		imshow("Depth Map", tmp);
-////		waitKey(0);
-////		destroyWindow("Depth Map");
-//	}
-
-	
-	return mse[0];
 }
 
 

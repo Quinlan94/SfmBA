@@ -1,7 +1,11 @@
 
 
 #include <opencv2/core/core.hpp>
-#include <opencv2/features2d/features2d.hpp>
+
+#include <opencv2/calib3d/calib3d.hpp>
+#include <Eigen/Core>
+#include <Eigen/Dense>
+
 #include <vector>
 #include <iostream>
 #include <list>
@@ -9,6 +13,18 @@
 
 #ifndef _COMMON_H
 #define _COMMON_H
+using namespace std;
+using namespace cv;
+using namespace Eigen;
+namespace Eigen {
+
+	typedef Eigen::Matrix<double, 3, 4> Matrix3x4d;
+	typedef Eigen::Matrix<double,9,1> Vector9d;
+}
+typedef vector<KeyPoint> v_keypoint;
+typedef vector<DMatch> v_match;
+typedef vector<Point2f> v_point;
+typedef vector<pair<int,int>> v_pair;
 
 struct CloudPoint {
 	cv::Point3d pt;
@@ -28,9 +44,19 @@ void GetAlignedPointsFromMatch(const std::vector<cv::KeyPoint>& imgpts1,
 							   const std::vector<cv::DMatch>& matches,
 							   std::vector<cv::KeyPoint>& pt_set1,
 							   std::vector<cv::KeyPoint>& pt_set2,
-							   std::vector<int>& kp_idx);
+							   std::vector<std::pair<int,int>>& kp_idx);
 cv::Point3d FirstFrame2Second(cv::Point3d,cv::Mat P);
 cv::Point3d CurrentPt2World(cv::Point3d point,std::vector<cv::Mat> P1_trans,int count);
+
+Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
+								vector<CloudPoint> &pointcloud, const vector<Point3f> &points_3d);
+
+
+double* CvMatrix2ArrayCamera( Mat R,Mat K,Mat t);
+double* CvPoint3d2ArrayPoint( Point3d p);
+void BundleAdjustment(const vector<KeyPoint> keypoints_2,const v_pair kp_depth_idx,
+                      const Mat R,const Mat K,const Mat t,vector<CloudPoint> &pointcloud);
+
 
 
 
