@@ -12,7 +12,7 @@
 
 #include "rotation.h"
 #include "projection.h"
-
+int i = 0;
 class SnavelyReprojectionError
 {
 public:
@@ -27,6 +27,9 @@ public:
         CamProjectionWithDistortion(camera, point, predictions);
         residuals[0] = predictions[0] - T(observed_x);
         residuals[1] = predictions[1] - T(observed_y);
+
+        //std::cout<<"我被执行了"<<i<<"次"<<endl;
+        //i++;
 
         return true;
     }

@@ -10,7 +10,7 @@
 // camera : 9 dims array with
 // [0-2] : angle-axis rotation
 // [3-5] : translateion
-// [6-8] : camera parameter, [6] focal length, [7-8] second and forth order radial distortion
+// [6-8] : camera parameter, [6] focal length, [7-8] cx and cy.
 // point : 3D location.
 // predictions : 2D predictions with center of the image plane.
 
@@ -29,7 +29,7 @@ inline bool CamProjectionWithDistortion(const T* camera, const T* point, T* pred
     T xp = p[0]/p[2];
     T yp = p[1]/p[2];
 
-    // Apply second and fourth order radial distortion
+
     const T& cx = camera[7];
     const T& cy = camera[8];
 

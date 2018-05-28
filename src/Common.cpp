@@ -167,7 +167,7 @@ void SetOrdering( double* cameras ,double * points,const int num_cameras,const i
 
 }
 void SetMinimizerOptions(Solver::Options* options){
-    options->max_num_iterations = 10;
+    options->max_num_iterations = 100;
     options->minimizer_progress_to_stdout = true;
     options->num_threads = 1;
     // options->eta = params.eta;
@@ -180,7 +180,7 @@ void SetMinimizerOptions(Solver::Options* options){
 void SetLinearSolver(ceres::Solver::Options* options)
 {
 
-    options->linear_solver_type = DENSE_QR;
+    options->linear_solver_type = DENSE_SCHUR;//不能是dense_qr  不然卡出翔，还要花一天的时间去找错误，解大型矩阵，最好稀疏。
     options->sparse_linear_algebra_library_type = ceres::SUITE_SPARSE;
     options->dense_linear_algebra_library_type = ceres::EIGEN;
 
@@ -192,39 +192,59 @@ void BundleAdjustment(const vector<KeyPoint> keypoints_2,const v_pair kp_depth_i
                       const Mat R,const Mat K,const Mat t,vector<CloudPoint> &pointcloud)
 {
     double* camera = CvMatrix2ArrayCamera(R,K,t);
-    double* points = new double[3*pointcloud.size()];
-    double* assign = points;
+    cout<<*camera<<endl;
+    double* points = new double[3*pointcloud.size()];//考虑使用智能指针，待优化
+    double* points_temp = points;
     for (int j = 0; j < pointcloud.size(); ++j)
     {
-        *assign = pointcloud[j].pt.x;
-        assign++;
-        *assign = pointcloud[j].pt.y;
-        assign++;
-        *assign = pointcloud[j].pt.z;
-        assign++;
+        *points_temp = pointcloud[j].pt.x;
+        points_temp++;
+        *points_temp = pointcloud[j].pt.y;
+        points_temp++;
+        *points_temp = pointcloud[j].pt.z;
+        points_temp++;
+
+    }
+    double *observe = new double[kp_depth_idx.size()*2];
+    cout<<" kp_depth_idx.size() :"<<kp_depth_idx.size()<<endl;
+    double *observe_temp = observe;
+    for (int k = 0; k < kp_depth_idx.size(); ++k) {
+        *observe_temp = keypoints_2[kp_depth_idx[k].second].pt.x;
+        observe_temp++;
+        *observe_temp = keypoints_2[kp_depth_idx[k].second].pt.y;
+        observe_temp++;
 
     }
     Problem problem;
-    for (int i = 0; i < pointcloud.size(); ++i)
+    for (int i = 0; i < kp_depth_idx.size(); ++i)
     {
         CostFunction* cost_function;
-        cost_function = SnavelyReprojectionError::Create(keypoints_2[kp_depth_idx[i].second].pt.x,
-                                                         keypoints_2[kp_depth_idx[i].second].pt.y);
+        cost_function = SnavelyReprojectionError::Create(observe[2*i+0],observe[2*i+1]);
         LossFunction* loss_function =  new HuberLoss(1.0);
 
-        problem.AddResidualBlock(cost_function, loss_function, camera, points+3*i);
+        double *point =points+3*i;
+        std::cout<<"point adress: "<<point<<endl;
+        std::cout<<"point value: "<<*point<<" "<<*(point+1)<<" "<<*(point+2)<<endl;
+
+        problem.AddResidualBlock(cost_function, NULL, camera, point);
+
+
+
 
     }
     Solver::Options options;
     SetMinimizerOptions(&options);
     SetLinearSolver(&options);
-    SetOrdering(camera,points,1,pointcloud.size(),&options);
+   // SetOrdering(camera,points,1,pointcloud.size(),&options);
 
-    options.gradient_tolerance = 1e-16;
-    options.function_tolerance = 1e-16;
+    options.gradient_tolerance = 1e-15;
+    options.function_tolerance = 1e-15;
     Solver::Summary summary;
     ceres::Solve(options, &problem, &summary);
     std::cout << summary.FullReport() << "\n";
+
+    delete points;
+    delete camera;
 }
 
 
