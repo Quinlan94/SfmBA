@@ -3,6 +3,8 @@
 #include <opencv2/core/core.hpp>
 
 #include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
@@ -27,7 +29,7 @@ typedef vector<Point2f> v_point;
 typedef vector<pair<int,int>> v_pair;
 
 struct CloudPoint {
-	cv::Point3d pt;
+    cv::Point3d pt;
 	std::vector<int> imgpt_for_img;
 	double reprojection_error;
 };
@@ -49,13 +51,13 @@ cv::Point3d FirstFrame2Second(cv::Point3d,cv::Mat P);
 cv::Point3d CurrentPt2World(cv::Point3d point,std::vector<cv::Mat> P1_trans,int count);
 
 Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
-								vector<CloudPoint> &pointcloud, const vector<Point3f> &points_3d);
+								vector<CloudPoint> &pointcloud, const vector<Point3d> &points_3d);
 
 
 double* CvMatrix2ArrayCamera( Mat R,Mat K,Mat t);
 double* CvPoint3d2ArrayPoint( Point3d p);
-void BundleAdjustment(const vector<KeyPoint> keypoints_2,const v_pair kp_depth_idx,
-                      const Mat R,const Mat K,const Mat t,vector<CloudPoint> &pointcloud);
+void BundleAdjustment(const vector<KeyPoint> keypoints_2_depth,
+                      Mat &R, Mat& K,Mat& t,vector<CloudPoint> &pointcloud);
 
 
 

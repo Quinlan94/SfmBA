@@ -36,11 +36,8 @@ bool FindCameraMatrices(const Mat& K,
 {
 	Mat_<double> R1(3,3);
             R1= R_cv;
-	Mat_<double> R2(3,3);
-
 	Mat_<double> t1(1,3);
            t1 = t_cv;
-	Mat_<double> t2(1,3);
    /*
     *
     //================================================================
@@ -71,17 +68,14 @@ bool FindCameraMatrices(const Mat& K,
 				R1(2,0),	R1(2,1),	R1(2,2),	t1(2)); // Camara Matrix
 	P = Matx34d(1,0,0,0,
 				0,1,0,0,
-				0,0,1,0);
+				0,0,1,0);*/
 
 
-//    P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t1(0),
-//                 R1(1,0),	R1(1,1),	R1(1,2),	t1(1),
-//                 R1(2,0),	R1(2,1),	R1(2,2),	t1(2));
-//    P = Matx34d(1,0,0,0,
-//                0,1,0,0,
-//                0,0,1,0);
+    P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t1(0),
+                 R1(1,0),	R1(1,1),	R1(1,2),	t1(1),
+                 R1(2,0),	R1(2,1),	R1(2,2),	t1(2));
 	//cout << "Testing P1 " << endl << P1 << endl;
-*/
+
 	vector<CloudPoint> pcloud,pcloud1; 
 	vector<KeyPoint> corresp;
 

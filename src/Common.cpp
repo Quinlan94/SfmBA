@@ -89,7 +89,8 @@ cv::Point3d CurrentPt2World(cv::Point3d point,std::vector<cv::Mat> P1_trans,int 
 	return  FirstFrame2Second(point,Pw.inv());//注意 此时第一视图为当前坐标，第二视图为世界坐标
 }
 Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
-                                vector<CloudPoint> &pointcloud, const vector<Point3f> &points_3d) {
+                                vector<CloudPoint> &pointcloud, const vector<Point3d> &points_3d) {
+    cout<<"reproj P1: "<<P1<<endl;
     vector<double> reproj_error;
     Mat_<double> KP1 = K * Mat(P1);
     Mat_<double> X = Mat_<double>(4,1);
@@ -188,45 +189,43 @@ void SetLinearSolver(ceres::Solver::Options* options)
     options->num_linear_solver_threads =1;
 
 }
-void BundleAdjustment(const vector<KeyPoint> keypoints_2,const v_pair kp_depth_idx,
-                      const Mat R,const Mat K,const Mat t,vector<CloudPoint> &pointcloud)
+void BundleAdjustment(const vector<KeyPoint> keypoints_2_depth,
+                       Mat &R, Mat& K,Mat& t,vector<CloudPoint> &pointcloud)
 {
     double* camera = CvMatrix2ArrayCamera(R,K,t);
-    cout<<*camera<<endl;
+    //std::cout<<"camera value: "<<*camera<<" "<<*(camera+1)<<" "<<*(camera+2)<<endl;
     double* points = new double[3*pointcloud.size()];//考虑使用智能指针，待优化
     double* points_temp = points;
     for (int j = 0; j < pointcloud.size(); ++j)
     {
-        *points_temp = pointcloud[j].pt.x;
-        points_temp++;
-        *points_temp = pointcloud[j].pt.y;
-        points_temp++;
-        *points_temp = pointcloud[j].pt.z;
-        points_temp++;
+        points[3*j+0] = pointcloud[j].pt.x;
+        //points_temp++;
+        points[3*j+1] = pointcloud[j].pt.y;
+        //points_temp++;
+        points[3*j+2] = pointcloud[j].pt.z;
+        //points_temp++;
 
     }
-    double *observe = new double[kp_depth_idx.size()*2];
-    cout<<" kp_depth_idx.size() :"<<kp_depth_idx.size()<<endl;
+    double *observe = new double[keypoints_2_depth.size()*2];
     double *observe_temp = observe;
-    for (int k = 0; k < kp_depth_idx.size(); ++k) {
-        *observe_temp = keypoints_2[kp_depth_idx[k].second].pt.x;
+    for (int k = 0; k < keypoints_2_depth.size(); ++k) {
+        *observe_temp = keypoints_2_depth[k].pt.x;
         observe_temp++;
-        *observe_temp = keypoints_2[kp_depth_idx[k].second].pt.y;
+        *observe_temp = keypoints_2_depth[k].pt.y;
         observe_temp++;
 
     }
     Problem problem;
-    for (int i = 0; i < kp_depth_idx.size(); ++i)
+
+    for (int i = 0; i < keypoints_2_depth.size(); ++i)
     {
         CostFunction* cost_function;
         cost_function = SnavelyReprojectionError::Create(observe[2*i+0],observe[2*i+1]);
         LossFunction* loss_function =  new HuberLoss(1.0);
 
         double *point =points+3*i;
-        std::cout<<"point adress: "<<point<<endl;
-        std::cout<<"point value: "<<*point<<" "<<*(point+1)<<" "<<*(point+2)<<endl;
 
-        problem.AddResidualBlock(cost_function, NULL, camera, point);
+        problem.AddResidualBlock(cost_function, loss_function, camera, point);
 
 
 
@@ -242,6 +241,49 @@ void BundleAdjustment(const vector<KeyPoint> keypoints_2,const v_pair kp_depth_i
     Solver::Summary summary;
     ceres::Solve(options, &problem, &summary);
     std::cout << summary.FullReport() << "\n";
+
+    Mat_<double> r_temp(3,1),t_temp(3,1);
+    r_temp<<camera[0],camera[1],camera[2];
+    Rodrigues(r_temp,R);
+    cout<<"R : "<<R<<endl;
+    t_temp<<camera[3],camera[4],camera[5];
+    t = t_temp;
+    cout<<"t : "<<t<<endl;
+    Matx34d P1;
+    P1 <<   R.at<double>(0,0),	R.at<double>(0,1),	R.at<double>(0,2),	t.at<double>(0),
+            R.at<double>(1,0),	R.at<double>(1,1),	R.at<double>(1,2),	t.at<double>(1),
+            R.at<double>(2,0),	R.at<double>(2,1),	R.at<double>(2,2),	t.at<double>(2);
+    K.at<double>(0,0)= camera[6];
+    K.at<double>(1,1)= camera[6];
+    K.at<double>(0,2)= camera[7];
+    K.at<double>(1,2)= camera[8];
+    cout<<"K: "<<K<<endl;
+    vector<Point3d> points_3d;
+    for (int m = 0; m <pointcloud.size(); ++m) {
+        Point3d p;
+        p.x = points[3*m+0];
+        p.y = points[3*m+1];
+        p.z = points[3*m+2];
+
+        points_3d.push_back(p);
+    }
+    cout<<"points_3d.size()"<<points_3d.size()<<endl;
+    pointcloud.clear();
+    Scalar mse = ReprojErrorAndPointCloud(keypoints_2_depth, K, P1, pointcloud, points_3d);
+    cout<<"重投影误差： "<<mse[0]<<endl;
+
+
+
+
+
+
+
+
+
+    std::cout<<"point value: "<<*points<<" "<<*(points+1)<<" "<<*(points+2)<<endl;
+    std::cout<<"camera value: "<<*camera<<" "<<*(camera+1)<<" "<<*(camera+2)<<endl;
+
+
 
     delete points;
     delete camera;

@@ -198,7 +198,7 @@ double TriangulatePoints(const vector<KeyPoint>& pt_set1,
     }
 
     Mat pts_4d;
-    vector<Point3f> points_3d;
+    vector<Point3d> points_3d;
 	cv::triangulatePoints(P,P1,_pt_set1_pt,_pt_set2_pt,pts_4d);
     for ( int i=0; i<pts_4d.cols; i++ )
     {
