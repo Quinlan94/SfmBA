@@ -136,7 +136,7 @@ void FeatureMatching(const Mat& img_1,
 			existing_trainIdx.insert((*matches)[i].trainIdx);
 		}
 	}
-    //matches = &good_matches;
+    matches = &good_matches;
 
 
 		

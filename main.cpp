@@ -180,16 +180,8 @@ int main( int argc, char** argv )
     vector<v_match> v_matches(n-1);
     vector<DMatch> v_new_matches;
 
-    vector<Mat> P1_trans(n-1);
-    Matx34d P;
-    P1_trans[0] = (Mat_<double>(4,4)<<1,0,0,0,
-                            0,1,0,0,
-                            0,0,1,0,
-                            0,0,0,1);
-
-    P= Matx34d(1,0,0,0,
-               0,1,0,0,
-               0,0,1,0);
+    vector<Mat> TransMat(n-1);
+    vector<Mat> ProjMat(n-1);
 
     Mat v_K,v_Kinv,v_discoeff;
     v_K = ( Mat_<double> ( 3,3 ) << 2905.88, 0, 1416, 0, 2905.88, 1064, 0, 0, 1  );
@@ -264,27 +256,25 @@ int main( int argc, char** argv )
             cout <<"R: "<<R<<endl;
             cout <<"t: "<<t<<endl;
 
-            Mat P1_temp;
-            Matx34d P1;
-
             v_Kinv = v_K.inv();
-            P1_temp = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
+            TransMat[i] = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
                                           R(1,0),	R(1,1),	R(1,2),	t(1),
                                           R(2,0),	R(2,1),	R(2,2),	t(2),
                                           0 ,         0,     0,      1);
-            cout << " P1_temp: " << P1_temp << endl;
-            P1_trans[i] = P1_trans[i] * P1_temp;
-/*
-            P1 = Matx34d (P1_trans[i].at<double>(0,0),	P1_trans[i].at<double>(0,1),	P1_trans[i].at<double>(0,2),	P1_trans[i].at<double>(0,3),
-                         P1_trans[i].at<double>(1,0),	P1_trans[i].at<double>(1,1),	P1_trans[i].at<double>(1,2),	P1_trans[i].at<double>(1,3),
-                         P1_trans[i].at<double>(2,0),	P1_trans[i].at<double>(2,1),	P1_trans[i].at<double>(2,2),	P1_trans[i].at<double>(2,3));
-*/
-            //cout << " P1 " << endl << P1 << endl;
-            FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
+            ProjMat[i] = (Mat_<double>(4,4)<<1,0,0,0,
+                                             0,1,0,0,
+                                             0,0,1,0,
+                                             0,0,0,1);
+            cout<<" ProjMat[0] :"<<ProjMat[0]<<endl;
+            ProjMat[i+1] = TransMat[i] *  ProjMat[i];
+
+
+
+            FindCameraMatrices(v_K,v_Kinv,F,ProjMat[i],TransMat[i],v_discoeff,
                                imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,each_mean_reproj_error);
             BundleAdjustment(imgpts_good[i+1],R,v_K,t,pointcloud);
 
-            P1_trans[i] =  (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
+            TransMat[i] =  (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
                                                R(1,0),	R(1,1),	R(1,2),	t(1),
                                                R(2,0),	R(2,1),	R(2,2),	t(2),
                                                0 ,         0,     0,      1);
@@ -326,8 +316,8 @@ int main( int argc, char** argv )
                         if(it->second == m.queryIdx)//当前匹配对的第一副图是否在上一匹配对中计算过深度
                         {
                             int index = distance(kp_good_depth_idx[i-1].begin(),it);//索引位置对应点云位置，即对应的深度
-
-                            pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,P1_trans[i-1]));//可以考虑筛选一些重投影误差较大点
+                            //对应的点是否算放错了，而导致pnp算法不准确的
+                            pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,TransMat[i-1]));//可以考虑筛选一些重投影误差较大点
                             pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);//然而并没有什么屁用，反而更差。而且上一次优化的结果，对本次并没有什么影响。。什么鬼
                             break;
                         }
@@ -339,15 +329,15 @@ int main( int argc, char** argv )
             Mat r;
             Mat_<double> R(3,3);
             Mat_<double> t(3,1);
-            solvePnP ( pts_3d, pts_2d, v_K, Mat(), r, t, false );//筛选后的点是否效果明显,很奇怪。
+            solvePnP( pts_3d, pts_2d, v_K, Mat(), r, t, false);//筛选后的点是否效果明显,很奇怪。
             //cout<<"什么鬼: "<<r<<endl;
 
             cv::Rodrigues ( r, R );//旋转向量是个3维，那旋转角度呢，模是弧度
-//            R<<0.99636,0.00297,0.08516,
-//                    -0.00628,0.99923,0.038607,
-//                    -0.08498,-0.03900,0.99561;
-//            t<<-0.99518,-0.01410,0.09701;
-
+            /*R<<0.99636,0.00297,0.08516,
+                    -0.00628,0.99923,0.038607,
+                    -0.08498,-0.03900,0.99561;
+            t<<-0.99518,-0.01410,0.09701;
+*/
 
             cout<<"R="<<endl<<R<<endl;
             cout<<"t="<<endl<<t<<endl;
@@ -358,21 +348,23 @@ int main( int argc, char** argv )
             Matx34d P1;
 
             v_Kinv = v_K.inv();
-            P1_trans[i] = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
+            TransMat[i] = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
                                               R(1,0),	R(1,1),	R(1,2),	t(1),
                                               R(2,0),	R(2,1),	R(2,2),	t(2),
                                               0,        0,      0,      1);
+            ProjMat[i+1] = TransMat[i] *  ProjMat[i];
+
 
 /*
-//            P1_trans = P1_trans * P1_temp;
-//            P1 = Matx34d (P1_trans.at<double>(0,0),	P1_trans.at<double>(0,1),	P1_trans.at<double>(0,2),	P1_trans.at<double>(0,3),
-//                          P1_trans.at<double>(1,0),	P1_trans.at<double>(1,1),	P1_trans.at<double>(1,2),	P1_trans.at<double>(1,3),
-//                          P1_trans.at<double>(2,0),	P1_trans.at<double>(2,1),	P1_trans.at<double>(2,2),	P1_trans.at<double>(2,3));
+//            TransMat = TransMat * P1_temp;
+//            P1 = Matx34d (TransMat.at<double>(0,0),	TransMat.at<double>(0,1),	TransMat.at<double>(0,2),	TransMat.at<double>(0,3),
+//                          TransMat.at<double>(1,0),	TransMat.at<double>(1,1),	TransMat.at<double>(1,2),	TransMat.at<double>(1,3),
+//                          TransMat.at<double>(2,0),	TransMat.at<double>(2,1),	TransMat.at<double>(2,2),	TransMat.at<double>(2,3));
 //
 */
-            FindCameraMatrices(v_K,v_Kinv,F,P,P1,R,t,v_discoeff,
+            FindCameraMatrices(v_K,v_Kinv,F,ProjMat[i],TransMat[i],v_discoeff,
                                imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,each_mean_reproj_error);
-            BundleAdjustment(imgpts_good[i+1],R,v_K,t,pointcloud);
+           // BundleAdjustment(imgpts_good[i+1],R,v_K,t,pointcloud);
 
 
 
@@ -400,9 +392,9 @@ int main( int argc, char** argv )
                         if(pointcloud[index].reprojection_error <= each_mean_reproj_error[i])
                         {
                             Point_PCL p;
-                            p.x = CurrentPt2World(pointcloud[index].pt, P1_trans, i).x;
-                            p.y = CurrentPt2World(pointcloud[index].pt, P1_trans, i).y;
-                            p.z = CurrentPt2World(pointcloud[index].pt, P1_trans, i).z;
+                            p.x = CurrentPt2World(pointcloud[index].pt, TransMat, i).x;
+                            p.y = CurrentPt2World(pointcloud[index].pt, TransMat, i).y;
+                            p.z = CurrentPt2World(pointcloud[index].pt, TransMat, i).z;
 
                             p.r= 50;
                             p.g=255;
@@ -427,9 +419,9 @@ int main( int argc, char** argv )
                 //if(pointcloud[j].reprojection_error < each_mean_reproj_error[i])
                 {
                     Point_PCL p;
-                    p.x = CurrentPt2World(pointcloud[j].pt,P1_trans,i).x;
-                    p.y = CurrentPt2World(pointcloud[j].pt,P1_trans,i).y;
-                    p.z = CurrentPt2World(pointcloud[j].pt,P1_trans,i).z;
+                    p.x = CurrentPt2World(pointcloud[j].pt,TransMat,i).x;
+                    p.y = CurrentPt2World(pointcloud[j].pt,TransMat,i).y;
+                    p.z = CurrentPt2World(pointcloud[j].pt,TransMat,i).z;
 //                p.x = pointcloud[i].pt.x;
 //                p.y = pointcloud[i].pt.y;
 //                p.z = pointcloud[i].pt.z;
@@ -449,13 +441,17 @@ int main( int argc, char** argv )
                 if(pointcloud[j].reprojection_error <= each_mean_reproj_error[i])
                 {
                     Point_PCL p;
+                    Point3d p_cv;
 
                     p.x = pointcloud[j].pt.x;
                     p.y = pointcloud[j].pt.y;
                     p.z = pointcloud[j].pt.z;
-                   /* p.x = CurrentPt2World(pointcloud[j].pt, P1_trans, i).x;
-                    p.y = CurrentPt2World(pointcloud[j].pt, P1_trans, i).y;
-                    p.z = CurrentPt2World(pointcloud[j].pt, P1_trans, i).z;*/
+                  /*  p_cv = CurrentPt2World(pointcloud[j].pt, TransMat, i);
+                    p.x = p_cv.x;
+                    p.y = p_cv.y;
+                    p.z = p_cv.z;*/
+                    if(j==0)
+                     cout<<" "<<p.x<<" "<<p.y<<" "<<p.z<<endl;
 
 
                     p.r= 55;
