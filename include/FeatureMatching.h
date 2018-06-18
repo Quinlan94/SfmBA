@@ -25,11 +25,14 @@ using namespace cv;
 
 
 
-void FeatureMatching(const Mat& img_1, 
+bool FeatureMatching(const Mat& img_1,
 				   const Mat& img_2, 
 				   vector<KeyPoint>& keypts1,
 				   vector<KeyPoint>& keypts2,
-				   vector<KeyPoint>& keypts1_good,
-				   vector<KeyPoint>& keypts2_good,
-				   	vector<DMatch>* matches,
-					int method);
+                     vector<KeyPoint>& orb_keypts1,
+                     vector<KeyPoint>& orb_keypts2,
+				   	vector<DMatch>& fliter_matches,
+					 vector<DMatch>& best_matches,
+					FeatureExtract method,
+                    bool initial,
+int& mindist);

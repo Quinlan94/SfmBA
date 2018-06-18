@@ -68,20 +68,16 @@ bool FindCameraMatrices(const Mat& K,
 				0,0,1,0);*/
     Matx34d P,P1;
     Mat temp;
-    temp = TransMat * ProjMat;
-	cout<<" ProjMat[0] :"<<ProjMat<<endl;
-    cout << "Testing temp " << endl << temp << endl;
+    temp =  ProjMat * TransMat;
+
+    P = Matx34d(ProjMat.at<double>(0,0),ProjMat.at<double>(0,1),ProjMat.at<double>(0,2),ProjMat.at<double>(0,3),
+                ProjMat.at<double>(1,0),ProjMat.at<double>(1,1),ProjMat.at<double>(1,2),ProjMat.at<double>(1,3),
+                ProjMat.at<double>(2,0),ProjMat.at<double>(2,1),ProjMat.at<double>(2,2),ProjMat.at<double>(2,3));
+    P1 = Matx34d(temp.at<double>(0,0),temp.at<double>(0,1),temp.at<double>(0,2),temp.at<double>(0,3),
+                 temp.at<double>(1,0),temp.at<double>(1,1),temp.at<double>(1,2),temp.at<double>(1,3),
+                 temp.at<double>(2,0),temp.at<double>(2,1),temp.at<double>(2,2),temp.at<double>(2,3));
 
 
-    P = Matx34d(ProjMat.at<double>(0,0),ProjMat.at<double>(0,1),ProjMat.at<double>(0,2),
-                ProjMat.at<double>(1,0),ProjMat.at<double>(1,1),ProjMat.at<double>(1,2),
-                ProjMat.at<double>(2,0),ProjMat.at<double>(2,1),ProjMat.at<double>(2,2));
-    P1 = Matx34d(temp.at<double>(0,0),temp.at<double>(0,1),temp.at<double>(0,2),
-                 temp.at<double>(1,0),temp.at<double>(1,1),temp.at<double>(1,2),
-                 temp.at<double>(2,0),temp.at<double>(2,1),temp.at<double>(2,2));
-
-    cout << "Testing P " << endl << P << endl;
-	cout << "Testing P1 " << endl << P1 << endl;
 
 	vector<CloudPoint> pcloud,pcloud1; 
 	vector<KeyPoint> corresp;

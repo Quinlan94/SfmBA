@@ -35,8 +35,8 @@
 #include <string>
 #include <stdlib.h>
 
-#include <GL/glut.h>
-#include <GL/gl.h>
+//#include <GL/glut.h>
+//#include <GL/gl.h>
 #include <math.h>
 
 
@@ -176,8 +176,8 @@ int main( int argc, char** argv )
 	}
 #if 1
     int n = images.size();
-    vector<v_keypoint> keypoints(n),keypoints_good(n);//嵌套容器要初始化，不然内存出错
-    vector<v_match> v_matches(n-1);
+    vector<v_keypoint> keypoints(n),orb_keypoints(n);//嵌套容器要初始化，不然内存出错
+    vector<v_match> v_matches(n-1),best_matches(n-1);
     vector<DMatch> v_new_matches;
 
     vector<Mat> TransMat(n-1);
@@ -188,7 +188,8 @@ int main( int argc, char** argv )
     v_discoeff = ( Mat_<double> ( 5,1 ) << 0, 0, 0, 0, 0 );
 
 
-    vector<v_point> pts(n);
+
+    vector<v_point> pts(n),tem_best_pts(n),best_pts(n);
     vector<v_pair> kp_good_depth_idx(n-1);
     vector<double> each_mean_reproj_error;
     unordered_set<int> kp_depth_idx;
@@ -196,22 +197,22 @@ int main( int argc, char** argv )
     for(int i = 0;i<images.size()-1;i++)
     {
 
-        FeatureMatching(images[i],images[i+1],keypoints[i],keypoints[i+1],
-                        keypoints_good[i],keypoints_good[i+1],&v_matches[i],1);//重复累赘，待优化
+        int min_dist;
+        FeatureMatching(images[i],images[i+1],keypoints[i],keypoints[i+1],orb_keypoints[i],orb_keypoints[i+1],
+                        v_matches[i],best_matches[i],Orb,images_pair_is_initial,min_dist);//重复累赘，待优化
         vector<pair<int,int>> kp_idx__temp;
         vector<uchar> status;
-        vector<v_keypoint> imgpts_tmp(n),imgpts_good(n);
+        vector<v_keypoint> imgpts_tmp(n),imgpts_good(n),keypoints_best(n);
         GetAlignedPointsFromMatch(keypoints[i], keypoints[i+1], v_matches[i],
                                   imgpts_tmp[i], imgpts_tmp[i+1],kp_idx__temp);
         KeyPointsToPoints(imgpts_tmp[i], pts[i]);
         KeyPointsToPoints(imgpts_tmp[i+1], pts[i+1]);
-//        KeyPointsToPoints(keypoints_good[i], pts[i]);
-//        KeyPointsToPoints(keypoints_good[i+1], pts[i+1]);
+
         double minVal,maxVal;
         cv::minMaxIdx(pts[i],&minVal,&maxVal);
 
         Mat F = findFundamentalMat(pts[i], pts[i+1], FM_RANSAC, 0.006*maxVal, 0.99, status);
-        cout << "F keeping " << countNonZero(status) << " / " << status.size() << endl;
+        cout << "筛选后匹配点" << countNonZero(status) << " / " << status.size() << endl;
 
         for (unsigned int j=0; j<status.size(); j++)
         {
@@ -226,33 +227,43 @@ int main( int argc, char** argv )
                 v_new_matches.push_back(v_matches[i][j]);
 
 
+
             }
         }
 		v_matches[i] = v_new_matches;
         v_new_matches.clear();
-/*
-//        Mat img_matches;
-//        drawMatches( images[i], keypoints[i], images[i+1], keypoints[i+1],
-//                     v_matches[i], img_matches, Scalar::all(-1), Scalar::all(-1),
-//                     vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-//        //-- Show detected matches
-//        imshow( "Feature Matches", img_matches );
-//        waitKey(30);
-//        destroyWindow("Feature Matches");
-//        imwrite("Image_Matches.jpg",img_matches);
- */
+        status.clear();
+        Mat img_matches;
+        drawMatches( images[i], keypoints[i], images[i+1], keypoints[i+1],
+                     v_matches[i], img_matches, Scalar::all(-1), Scalar::all(-1),
+                     vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+
+        imwrite("../Image_Matches.jpg",img_matches);
+        //******************************************************************
+        GetAlignedPointsFromMatch(orb_keypoints[i], orb_keypoints[i+1], best_matches[i],
+                                  keypoints_best[i], keypoints_best[i+1]);
+
+        KeyPointsToPoints(keypoints_best[i], tem_best_pts[i]);
+        KeyPointsToPoints(keypoints_best[i+1], tem_best_pts[i+1]);
+        double t_minVal,t_maxVal;
+        cv::minMaxIdx(pts[i],&t_minVal,&t_maxVal);
+
+
+
+
+
         if(!images_pair_is_initial)
         {
             Point2d principal_point(1416, 1064);
             double focal_length = 2905.88;
             Mat essential_matrix;
-            essential_matrix = findEssentialMat(pts[i],pts[i+1],focal_length,principal_point,RANSAC);
+            essential_matrix = findEssentialMat(tem_best_pts[i],tem_best_pts[i+1],focal_length,principal_point,RANSAC);
             cout << "E: "<<essential_matrix<<endl;
 
             //Mat R_cv,t_cv;
             Mat_<double> R(3,3);
             Mat_<double> t(3,1);
-            recoverPose(essential_matrix,pts[i],pts[i+1],R,t,focal_length,principal_point);
+            recoverPose(essential_matrix,tem_best_pts[i],tem_best_pts[i+1],R,t,focal_length,principal_point);
             cout <<"R: "<<R<<endl;
             cout <<"t: "<<t<<endl;
 
@@ -265,14 +276,15 @@ int main( int argc, char** argv )
                                              0,1,0,0,
                                              0,0,1,0,
                                              0,0,0,1);
-            cout<<" ProjMat[0] :"<<ProjMat[0]<<endl;
-            ProjMat[i+1] = TransMat[i] *  ProjMat[i];
+
+            //ProjMat[i+1] = TransMat[i] *  ProjMat[i];
+
 
 
 
             FindCameraMatrices(v_K,v_Kinv,F,ProjMat[i],TransMat[i],v_discoeff,
                                imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,each_mean_reproj_error);
-            BundleAdjustment(imgpts_good[i+1],R,v_K,t,pointcloud);
+            //BundleAdjustment(imgpts_good[i+1],R,v_K,t,pointcloud);
 
             TransMat[i] =  (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
                                                R(1,0),	R(1,1),	R(1,2),	t(1),
@@ -281,7 +293,7 @@ int main( int argc, char** argv )
             int k = 0;
             for(int j=0;j<pointcloud.size();j++ )
             {
-                if(pointcloud[j].reprojection_error <= each_mean_reproj_error[i])
+                if(pointcloud[j].pt.z >=0)
                 {
                     Point_PCL p;
                     p.x = pointcloud[j].pt.x;
@@ -305,7 +317,28 @@ int main( int argc, char** argv )
 
             vector<Point3d> pts_3d;
             vector<Point2d> pts_2d;
+           /* int idx=0;
+            for (DMatch m:v_matches[i])
+            {
+                for (DMatch b:v_matches[i - 1])
+                {
+                    if (m.queryIdx == b.trainIdx)
+                    {
+                        if (pointcloud[idx].pt.z >= 0 )
+                        {
+                            pts_3d.push_back(
+                                    FirstFrame2Second(pointcloud[idx].pt, TransMat[i - 1]));//可以考虑筛选一些重投影误差较大点
+                            pts_2d.push_back(
+                                    keypoints[i + 1][m.trainIdx].pt);//然而并没有什么屁用，反而更差。而且上一次优化的结果，对本次并没有什么影响。。什么鬼
+                            idx++;
+                            break;
+                        }
+                    }
 
+                    if (idx >=v_matches[i-1].size()||pts_3d.size()>10)
+                        break;
+                }
+            }*/
             for (DMatch m:v_matches[i])
             {
                 vector<pair<int,int>>::iterator it;
@@ -315,14 +348,20 @@ int main( int argc, char** argv )
                     {
                         if(it->second == m.queryIdx)//当前匹配对的第一副图是否在上一匹配对中计算过深度
                         {
+
                             int index = distance(kp_good_depth_idx[i-1].begin(),it);//索引位置对应点云位置，即对应的深度
                             //对应的点是否算放错了，而导致pnp算法不准确的
-                            pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,TransMat[i-1]));//可以考虑筛选一些重投影误差较大点
-                            pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);//然而并没有什么屁用，反而更差。而且上一次优化的结果，对本次并没有什么影响。。什么鬼
-                            break;
+                            if(pointcloud[index].pt.z>=0 && pointcloud[index].reprojection_error<=each_mean_reproj_error[i-1])
+                            {
+                                pts_3d.push_back(FirstFrame2Second(pointcloud[index].pt,TransMat[i-1]));//可以考虑筛选一些重投影误差较大点
+                               pts_2d.push_back(keypoints[i+1][m.trainIdx].pt);//然而并没有什么屁用，反而更差。而且上一次优化的结果，对本次并没有什么影响。。什么鬼
+                               break;
+                            }
                         }
                     }
                 }
+
+
             }
             pointcloud.clear();
             cout<<"3d-2d pairs: "<<pts_3d.size() <<endl;
@@ -333,26 +372,25 @@ int main( int argc, char** argv )
             //cout<<"什么鬼: "<<r<<endl;
 
             cv::Rodrigues ( r, R );//旋转向量是个3维，那旋转角度呢，模是弧度
-            /*R<<0.99636,0.00297,0.08516,
-                    -0.00628,0.99923,0.038607,
-                    -0.08498,-0.03900,0.99561;
-            t<<-0.99518,-0.01410,0.09701;
-*/
 
             cout<<"R="<<endl<<R<<endl;
             cout<<"t="<<endl<<t<<endl;
             v_Kinv = v_K.inv();
-
-
-            Mat P1_temp;
-            Matx34d P1;
+            Mat temp;
 
             v_Kinv = v_K.inv();
             TransMat[i] = (Mat_<double>(4,4)<<R(0,0),	R(0,1),	R(0,2),	t(0),
                                               R(1,0),	R(1,1),	R(1,2),	t(1),
                                               R(2,0),	R(2,1),	R(2,2),	t(2),
                                               0,        0,      0,      1);
-            ProjMat[i+1] = TransMat[i] *  ProjMat[i];
+            ProjMat[i] =  ProjMat[i-1] * TransMat[i-1] ;
+           /* cout<<" ProjMat[1] :"<<ProjMat[i]<<endl;
+            cout<<" TransMat[1] :"<<TransMat[i]<<endl;
+           // ProjMat[i+1] = TransMat[i] *  ProjMat[i];//莫名其妙越界,相当于一个匿名Mat对象，找不到地址。
+            temp = ProjMat[i] *TransMat[i] ;
+            ProjMat[i+1]= temp.clone();
+            cout<<" ProjMat[2] :"<<ProjMat[2]<<endl;*/
+
 
 
 /*
@@ -364,7 +402,7 @@ int main( int argc, char** argv )
 */
             FindCameraMatrices(v_K,v_Kinv,F,ProjMat[i],TransMat[i],v_discoeff,
                                imgpts_good[i],imgpts_good[i+1],v_matches[i],pointcloud,each_mean_reproj_error);
-           // BundleAdjustment(imgpts_good[i+1],R,v_K,t,pointcloud);
+           //BundleAdjustment(imgpts_good[i+1],R,v_K,t,pointcloud);
 
 
 
@@ -438,7 +476,7 @@ int main( int argc, char** argv )
 
             for(int j=0;j<pointcloud.size();j++ )
             {
-                if(pointcloud[j].reprojection_error <= each_mean_reproj_error[i])
+                if(pointcloud[j].pt.z>=0)
                 {
                     Point_PCL p;
                     Point3d p_cv;
@@ -473,118 +511,6 @@ int main( int argc, char** argv )
 
 #else
 
-	Mat img_1 = imread("../1.png");
-	Mat img_2 = imread("../2.png");
-    std::vector< DMatch > matches;
-	std::vector<KeyPoint> keypoints_1, keypoints_2,keypts1_good,keypts2_good;
-
-	if( !img_1.data || !img_2.data )
-	{ std::cout<< " --(!) Error reading images " << std::endl; return -1; } /// Read in Images
-
-	// 匹配
-	int Method = 1;
-	FeatureMatching(img_1,img_2,keypoints_1,keypoints_2,keypts1_good,keypts2_good,&matches,Method); // matched featurepoints
-	 // Calculate Matrices
-	vector<Point2f> pts1,pts2;
-	vector<uchar> status;
-    vector<int> shit;
-
-
-	vector<KeyPoint> imgpts1_tmp,imgpts2_tmp,imgpts1_good,imgpts2_good;
-	GetAlignedPointsFromMatch(keypoints_1, keypoints_2, matches, imgpts1_tmp, imgpts2_tmp,shit);
-	KeyPointsToPoints(imgpts1_tmp, pts1);//点按顺序排列，并且已对齐
-	KeyPointsToPoints(imgpts2_tmp, pts2);
-	double minVal,maxVal;
-	cv::minMaxIdx(pts1,&minVal,&maxVal);
-
-	Mat F = findFundamentalMat(pts1, pts2, FM_RANSAC, 0.006*maxVal, 0.99, status);//maxVal 过滤掉误差较大的匹配点
-	/*
-	 *  status
-    具有N个元素的输出数组，在计算过程中没有被舍弃的点，元素被置为1；否则置为0。这个数组只可以在方法RANSAC and LMedS 情况下使用；
-    在其它方法的情况下，status一律被置为1。这个参数是可选参数。
-	 * */
-
-	double status_nz = countNonZero(status);
-	double status_sz = status.size();
-	double kept_ratio = status_nz / status_sz;
-
-	vector<DMatch> new_matches;
-	cout << "F keeping " << countNonZero(status) << " / " << status.size() << endl;
-	//剩余的点
-	for (unsigned int i=0; i<status.size(); i++) {
-		if (status[i]) 
-		{
-			imgpts1_good.push_back(imgpts1_tmp[i]);
-			imgpts2_good.push_back(imgpts2_tmp[i]);
-
-			new_matches.push_back(matches[i]);
-
-			//good_matches_.push_back(DMatch(imgpts1_good.size()-1,imgpts1_good.size()-1,1.0));
-		}
-	}	
-	
-	cout << matches.size() << " matches before, " << new_matches.size() << " new matches after Fundamental Matrix\n";
-	matches = new_matches; //keep only those points who survived the fundamental matrix
-
-	Mat img_matches;
-	drawMatches( img_1, keypoints_1, img_2, keypoints_2,
-		matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );		
-	//-- Show detected matches
-	imshow( "Feature Matches", img_matches );
-	waitKey(30);
-	destroyWindow("Feature Matches");
-	imwrite("Image_Matches.jpg",img_matches);
-
-
-
-	/////////////////////
-	Mat K,Kinv,discoeff; // Read from calibration file
-    K = ( Mat_<double> ( 3,3 ) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1 );
-    discoeff = ( Mat_<double> ( 5,1 ) << 0, 0, 0, 0, 0 );
-    Point2d principal_point(325.1,249.7);
-    int focal_length = 521;
-    Mat essential_matrix;
-    essential_matrix = findEssentialMat(pts1,pts2,focal_length,principal_point,RANSAC);
-    cout << "E: "<<essential_matrix<<endl;
-
-    Mat R_cv,t_cv;
-    recoverPose(essential_matrix,pts1,pts2,R_cv,t_cv,focal_length,principal_point);
-    cout <<"R: "<<R_cv<<endl;
-    cout <<"t: "<<t_cv<<endl;
-
-
-	Kinv = K.inv();
-
-	Matx34d P, P1;
-    set<int> kp_idx_hell;
-	
-
-	bool CM = FindCameraMatrices(K,Kinv,F,P,P1,R_cv,t_cv,discoeff,imgpts1_good,imgpts2_good,matches,pointcloud,kp_idx_hell);
-
-
-
-//	Mat X(img_1.rows,img_1.cols,CV_32FC1);
-//	Mat Y(img_1.rows,img_1.cols,CV_32FC1);
-//	Mat Z(img_1.rows,img_1.cols,CV_32FC1);
-//	string filepath = "./save/";
-// saveXYZimages(img_1,pointcloud,imgpts1_good,filepath,X,Y,Z);
-
-
-
-
-
-
-
-    for(int i=0;i<pointcloud.size();i++ )
-    {
-        Point_PCL p;
-        p.x = pointcloud[i].pt.x;
-        p.y= pointcloud[i].pt.y;
-        p.z= pointcloud[i].pt.z;
-
-        pointCloud_PCL->points.push_back( p );
-    }
 #endif
     pointCloud_PCL->is_dense = false;
     cout<<"点云共有"<<pointCloud_PCL->size()<<"个点."<<endl;

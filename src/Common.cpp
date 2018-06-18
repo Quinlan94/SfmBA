@@ -50,11 +50,25 @@ void GetAlignedPointsFromMatch(const std::vector<cv::KeyPoint>& imgpts1,
         kp_idx.push_back(make_pair(matches[i].queryIdx,matches[i].trainIdx));
 	}	
 }
+void GetAlignedPointsFromMatch(const std::vector<cv::KeyPoint>& imgpts1,
+                               const std::vector<cv::KeyPoint>& imgpts2,
+                               const std::vector<cv::DMatch>& matches,
+                               std::vector<cv::KeyPoint>& pt_set1,
+                               std::vector<cv::KeyPoint>& pt_set2)
+{
+    for (unsigned int i=0; i<matches.size(); i++)
+    {
+
+        pt_set1.push_back(imgpts1[matches[i].queryIdx]);
+        pt_set2.push_back(imgpts2[matches[i].trainIdx]);
+    }
+}
 
 void KeyPointsToPoints(const vector<KeyPoint>& kps, vector<Point2f>& ps) 
 {
 	ps.clear();
-	for (unsigned int i=0; i<kps.size(); i++) ps.push_back(kps[i].pt);
+	for (unsigned int i=0; i<kps.size(); i++)
+        ps.push_back(kps[i].pt);
 }
 
 void PointsToKeyPoints(const vector<Point2f>& ps, vector<KeyPoint>& kps) 
@@ -96,18 +110,21 @@ Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, c
     Mat_<double> X = Mat_<double>(4,1);
     for (int i=0; i<points_3d.size(); i++)
     {
-        X << points_3d[i].x,points_3d[i].y,points_3d[i].z,1;
-        Mat_<double> xPt_img = KP1 * X;
-        Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
 
-        double reprj_err = norm(xPt_img_ - pt_set2[i].pt);
-        reproj_error.push_back(reprj_err);
+            X << points_3d[i].x, points_3d[i].y, points_3d[i].z, 1;
+            Mat_<double> xPt_img = KP1 * X;
+            Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
 
-        CloudPoint cp;
-        cp.pt = Point3d(X(0), X(1), X(2));
-        cp.reprojection_error = reprj_err;
+            double reprj_err = norm(xPt_img_ - pt_set2[i].pt);
+            if(points_3d[i].z>=0)
+                 reproj_error.push_back(reprj_err);
 
-        pointcloud.push_back(cp);
+            CloudPoint cp;
+            cp.pt = Point3d(X(0), X(1), X(2));
+            cp.reprojection_error = reprj_err;
+
+            pointcloud.push_back(cp);
+
         //correspImg1Pt.push_back(pt_set1[i]);
 
         //depths.push_back(X(2));
@@ -147,7 +164,10 @@ double* CvPoint3f2ArrayPoint( Point3d p)
 
     return point;
 }
-
+bool cl_greater(const DMatch& a,const DMatch& b)
+{
+    return  a.distance < b.distance;
+}
 void SetOrdering( double* cameras ,double * points,const int num_cameras,const int num_points,ceres::Solver::Options* options)
 {
 

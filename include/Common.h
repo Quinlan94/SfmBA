@@ -15,9 +15,14 @@
 
 #ifndef _COMMON_H
 #define _COMMON_H
+
+
 using namespace std;
 using namespace cv;
 using namespace Eigen;
+enum FeatureExtract{
+	Surf= 0,Orb ,Sift
+};
 namespace Eigen {
 
 	typedef Eigen::Matrix<double, 3, 4> Matrix3x4d;
@@ -47,9 +52,14 @@ void GetAlignedPointsFromMatch(const std::vector<cv::KeyPoint>& imgpts1,
 							   std::vector<cv::KeyPoint>& pt_set1,
 							   std::vector<cv::KeyPoint>& pt_set2,
 							   std::vector<std::pair<int,int>>& kp_idx);
+void GetAlignedPointsFromMatch(const std::vector<cv::KeyPoint>& imgpts1,
+                               const std::vector<cv::KeyPoint>& imgpts2,
+                               const std::vector<cv::DMatch>& matches,
+                               std::vector<cv::KeyPoint>& pt_set1,
+                               std::vector<cv::KeyPoint>& pt_set2);
 cv::Point3d FirstFrame2Second(cv::Point3d,cv::Mat P);
 cv::Point3d CurrentPt2World(cv::Point3d point,std::vector<cv::Mat> P1_trans,int count);
-
+bool cl_greater(const DMatch& a,const DMatch& b);
 Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
 								vector<CloudPoint> &pointcloud, const vector<Point3d> &points_3d);
 

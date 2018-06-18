@@ -1,3 +1,4 @@
+/*
 //
 // Created by quinlan on 18-5-8.
 //
@@ -7,7 +8,7 @@
 
 #endif //SFM_ARCBALL_H
 
-#include <GL/glut.h>
+//#include <GL/glut.h>
 #include <Eigen/Core>
 using namespace std;
 
@@ -127,3 +128,4 @@ void mousePressEvent(int button,int state,int x,int y)
 
 
 }
+*/
