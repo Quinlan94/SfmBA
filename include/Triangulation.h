@@ -20,40 +20,40 @@ using namespace cv;
 
 
 
-/**
- From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
- */
-cv::Mat_<double> LinearLSTriangulation(cv::Point3d u,		//homogenous image point (u,v,1)
-								   cv::Matx34d P,		//camera 1 matrix
-								   cv::Point3d u1,		//homogenous image point in 2nd camera
-								   cv::Matx34d P1		//camera 2 matrix
-								   );
+double DegToRad(const double deg);
+double RadToDeg(const double rad);
 
-#define EPSILON 0.00001
-/**
- From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
- */
-cv::Mat_<double> IterativeLinearLSTriangulation(cv::Point3d u,	//homogenous image point (u,v,1)
-											cv::Matx34d P,			//camera 1 matrix
-											cv::Point3d u1,			//homogenous image point in 2nd camera
-											cv::Matx34d P1			//camera 2 matrix
-											);
-double TriangulatePoints(const vector<KeyPoint>& pt_set1, 
-						const vector<KeyPoint>& pt_set2, 
+Eigen::Vector3d TriangulateMultiViewPoint(
+        const std::vector<Eigen::Matrix3x4d>& proj_matrices,
+        const std::vector<Eigen::Vector2d>& points);
+
+double TriangulatePoints(std::vector<cv::DMatch>& matches,
+		                 vector<KeyPoint>& pt_set1,
+						 vector<KeyPoint>& pt_set2,
 						const Mat& K,
-						const Mat& Kinv,
-						const Matx34d& P,
-						const Matx34d& P1,
+						 Eigen::Vector3d proj_center_1,
+						 Eigen::Vector3d proj_center_2,
+						const Mat& P,
+						const Mat& P1,
 						vector<CloudPoint>& pointcloud,
 						vector<KeyPoint>& correspImg1Pt,
-						const Mat& distcoeff);
-bool TestTriangulation(const vector<CloudPoint>& pcloud, const Matx34d& P, vector<uchar>& status);
+						const Mat& distcoeff,
+                        bool initial = false);
 
 
 Eigen::Vector3d TriangulatePointDLT(const Eigen::Matrix3x4d& proj_matrix1,
                                  const Eigen::Matrix3x4d& proj_matrix2,
                                  const Eigen::Vector2d& point1,
                                  const Eigen::Vector2d& point2);
+double CalculateTriangulationAngle(const Eigen::Vector3d& proj_center1,
+								   const Eigen::Vector3d& proj_center2,
+								   const Eigen::Vector3d& point3D);
+bool HasPointPositiveDepth(const Eigen::Matrix3x4d& proj_matrix,
+						   const Eigen::Vector3d& point3D);
+
+Eigen::Matrix3x4d CvMatToEigen34(Mat cv_matrix);
+Eigen::Vector3d CvPointToVector3d(Point3d p);
+
 
 
 

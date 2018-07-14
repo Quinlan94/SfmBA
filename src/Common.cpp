@@ -97,14 +97,17 @@ cv::Point3d CurrentPt2World(cv::Point3d point,std::vector<cv::Mat> P1_trans,int 
 
     for (int i = 0; i < count; ++i) {
 
-        Pw = Pw *P1_trans[i];
+        Pw =  P1_trans[i]*Pw;
 
     }
-	return  FirstFrame2Second(point,Pw.inv());//注意 此时第一视图为当前坐标，第二视图为世界坐标
+	return  FirstFrame2Second(point,Pw);//注意 此时第一视图为当前坐标，第二视图为世界坐标
 }
-Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
-                                vector<CloudPoint> &pointcloud, const vector<Point3d> &points_3d) {
-    cout<<"reproj P1: "<<P1<<endl;
+Scalar ReprojErrorAndPointCloud(vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
+                                vector<CloudPoint> &pointcloud, const vector<Point3d> &points_3d,std::vector<cv::DMatch>& good_matches) {
+
+
+    std::vector<cv::DMatch> temp_matches;
+    vector<KeyPoint> temp_pt_set2;
     vector<double> reproj_error;
     Mat_<double> KP1 = K * Mat(P1);
     Mat_<double> X = Mat_<double>(4,1);
@@ -116,18 +119,54 @@ Scalar ReprojErrorAndPointCloud(const vector<KeyPoint> &pt_set2, const Mat &K, c
             Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
 
             double reprj_err = norm(xPt_img_ - pt_set2[i].pt);
-            if(points_3d[i].z>=0)
-                 reproj_error.push_back(reprj_err);
 
-            CloudPoint cp;
-            cp.pt = Point3d(X(0), X(1), X(2));
-            cp.reprojection_error = reprj_err;
 
-            pointcloud.push_back(cp);
+            if(reprj_err<max_reproj_err)
+            {
+                reproj_error.push_back(reprj_err);
+            }
+        CloudPoint cp;
+        cp.pt = Point3d(X(0), X(1), X(2));
+        cp.reprojection_error = reprj_err;
 
-        //correspImg1Pt.push_back(pt_set1[i]);
 
-        //depths.push_back(X(2));
+        pointcloud.push_back(cp);
+        temp_matches.push_back(good_matches[i]);
+        temp_pt_set2.push_back(pt_set2[i]);
+
+
+    }
+    good_matches = temp_matches;
+    pt_set2 = temp_pt_set2;
+    Scalar mse = mean(reproj_error);
+    cout << "Done. \n\r"<<pointcloud.size()<<"points, " <<"mean square reprojetion err = " << mse[0] <<  endl;
+    return mse;
+}
+Scalar ReprojErrorAndPointCloud(vector<KeyPoint> &pt_set2, const Mat &K, const Matx34d &P1,
+                                vector<CloudPoint> &pointcloud, const vector<Point3d> &points_3d) {
+
+    vector<CloudPoint> max_err_pointcloud;
+    vector<double> reproj_error;
+    Mat_<double> KP1 = K * Mat(P1);
+    Mat_<double> X = Mat_<double>(4,1);
+    for (int i=0; i<points_3d.size(); i++)
+    {
+
+        X << points_3d[i].x, points_3d[i].y, points_3d[i].z, 1;
+        Mat_<double> xPt_img = KP1 * X;
+        Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
+
+        double reprj_err = norm(xPt_img_ - pt_set2[i].pt);
+
+        reproj_error.push_back(reprj_err);
+
+        CloudPoint cp;
+        cp.pt = Point3d(X(0), X(1), X(2));
+        cp.reprojection_error = reprj_err;
+        if(reprj_err>5)
+            max_err_pointcloud.push_back(cp);
+        pointcloud.push_back(cp);
+
     }
     Scalar mse = mean(reproj_error);
     cout << "Done. \n\r"<<pointcloud.size()<<"points, " <<"mean square reprojetion err = " << mse[0] <<  endl;
@@ -164,6 +203,18 @@ double* CvPoint3f2ArrayPoint( Point3d p)
 
     return point;
 }
+Point_PCL DisplayCamera(const Mat temp_center)
+{
+    Point_PCL center;
+    Point3d p_cv;
+    center.x = temp_center.at<double>(0, 3);
+    center.y = temp_center.at<double>(1, 3);
+    center.z = temp_center.at<double>(2, 3);
+    center.r= 55;
+    center.g=255;
+    center.b= 55;
+    return center;
+}
 bool cl_greater(const DMatch& a,const DMatch& b)
 {
     return  a.distance < b.distance;
@@ -191,8 +242,7 @@ void SetMinimizerOptions(Solver::Options* options){
     options->max_num_iterations = 100;
     options->minimizer_progress_to_stdout = true;
     options->num_threads = 1;
-    // options->eta = params.eta;
-    // options->max_solver_time_in_seconds = params.max_solver_time;
+
 
     options->trust_region_strategy_type = LEVENBERG_MARQUARDT;
 
@@ -209,21 +259,18 @@ void SetLinearSolver(ceres::Solver::Options* options)
     options->num_linear_solver_threads =1;
 
 }
-void BundleAdjustment(const vector<KeyPoint> keypoints_2_depth,
+void BundleAdjustment(vector<KeyPoint> keypoints_2_depth,
                        Mat &R, Mat& K,Mat& t,vector<CloudPoint> &pointcloud)
 {
     double* camera = CvMatrix2ArrayCamera(R,K,t);
     //std::cout<<"camera value: "<<*camera<<" "<<*(camera+1)<<" "<<*(camera+2)<<endl;
-    double* points = new double[3*pointcloud.size()];//考虑使用智能指针，待优化
+    double* points = new double[3*pointcloud.size()];
     double* points_temp = points;
     for (int j = 0; j < pointcloud.size(); ++j)
     {
         points[3*j+0] = pointcloud[j].pt.x;
-        //points_temp++;
         points[3*j+1] = pointcloud[j].pt.y;
-        //points_temp++;
         points[3*j+2] = pointcloud[j].pt.z;
-        //points_temp++;
 
     }
     double *observe = new double[keypoints_2_depth.size()*2];
@@ -256,8 +303,8 @@ void BundleAdjustment(const vector<KeyPoint> keypoints_2_depth,
     SetLinearSolver(&options);
    // SetOrdering(camera,points,1,pointcloud.size(),&options);
 
-    options.gradient_tolerance = 1e-15;
-    options.function_tolerance = 1e-15;
+    options.gradient_tolerance = 1;
+    options.function_tolerance = 0;
     Solver::Summary summary;
     ceres::Solve(options, &problem, &summary);
     std::cout << summary.FullReport() << "\n";
@@ -269,10 +316,10 @@ void BundleAdjustment(const vector<KeyPoint> keypoints_2_depth,
     t_temp<<camera[3],camera[4],camera[5];
     t = t_temp;
     cout<<"t : "<<t<<endl;
-    Matx34d P1;
-    P1 <<   R.at<double>(0,0),	R.at<double>(0,1),	R.at<double>(0,2),	t.at<double>(0),
+    Mat P1;
+    P1 = (Mat_<double>(3,4)<<R.at<double>(0,0),	R.at<double>(0,1),	R.at<double>(0,2),	t.at<double>(0),
             R.at<double>(1,0),	R.at<double>(1,1),	R.at<double>(1,2),	t.at<double>(1),
-            R.at<double>(2,0),	R.at<double>(2,1),	R.at<double>(2,2),	t.at<double>(2);
+            R.at<double>(2,0),	R.at<double>(2,1),	R.at<double>(2,2),	t.at<double>(2));
     K.at<double>(0,0)= camera[6];
     K.at<double>(1,1)= camera[6];
     K.at<double>(0,2)= camera[7];

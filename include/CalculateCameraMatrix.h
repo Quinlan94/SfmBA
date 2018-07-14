@@ -7,17 +7,17 @@
 using namespace std;
 using namespace cv;
 
-bool FindCameraMatrices(const Mat& K, 
+bool FindCameraMatrices(const Mat& K,
 						const Mat& Kinv,
-						const Mat& F,
-						Mat ProjMat,
-						Mat TransMat,
+						Mat ProjMat_1,
+						Mat ProjMat_2,
 						const Mat& distcoeff,
+						std::vector<cv::DMatch>& matches,
 						vector<KeyPoint>& imgpts1_good,
 						vector<KeyPoint>& imgpts2_good,
-						vector<DMatch>& matches,
 						vector<CloudPoint>& outCloud,
-                        vector<double>& mean_reproj_err);
+						vector<double>& mean_reproj_err,
+						bool initial);
 
 
 

@@ -35,4 +35,4 @@ bool FeatureMatching(const Mat& img_1,
 					 vector<DMatch>& best_matches,
 					FeatureExtract method,
                     bool initial,
-int& mindist);
+                   double& mindist);

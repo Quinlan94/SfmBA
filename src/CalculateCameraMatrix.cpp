@@ -18,17 +18,17 @@ using namespace std;
 
 
 
-bool FindCameraMatrices(const Mat& K, 
-						const Mat& Kinv,
-						const Mat& F,
-						Mat ProjMat,
-                        Mat TransMat,
-						const Mat& discoeff,
-						vector<KeyPoint>& imgpts1_good,
-						vector<KeyPoint>& imgpts2_good,
-						vector<DMatch>& matches,
-						vector<CloudPoint>& outCloud,
-                        vector<double>& mean_reproj_err)
+bool FindCameraMatrices(const Mat& K,
+                        const Mat& Kinv,
+                        Mat ProjMat_1,
+                        Mat ProjMat_2,
+                        const Mat& distcoeff,
+                        std::vector<cv::DMatch>& matches,
+                        vector<KeyPoint>& imgpts1_good,
+                        vector<KeyPoint>& imgpts2_good,
+                        vector<CloudPoint>& outCloud,
+                        vector<double>& mean_reproj_err,
+                        bool initial)
 {
     /*
 	Mat_<double> R1(3,3);
@@ -66,67 +66,30 @@ bool FindCameraMatrices(const Mat& K,
 	ProjMat = Matx34d(1,0,0,0,
 				0,1,0,0,
 				0,0,1,0);*/
-    Matx34d P,P1;
-    Mat temp;
-    temp =  ProjMat * TransMat;
+    Mat P,P1,temp,temp_1;
+	Eigen::Vector3d proj_center_1;
+	Eigen::Vector3d proj_center_2;
 
-    P = Matx34d(ProjMat.at<double>(0,0),ProjMat.at<double>(0,1),ProjMat.at<double>(0,2),ProjMat.at<double>(0,3),
-                ProjMat.at<double>(1,0),ProjMat.at<double>(1,1),ProjMat.at<double>(1,2),ProjMat.at<double>(1,3),
-                ProjMat.at<double>(2,0),ProjMat.at<double>(2,1),ProjMat.at<double>(2,2),ProjMat.at<double>(2,3));
-    P1 = Matx34d(temp.at<double>(0,0),temp.at<double>(0,1),temp.at<double>(0,2),temp.at<double>(0,3),
-                 temp.at<double>(1,0),temp.at<double>(1,1),temp.at<double>(1,2),temp.at<double>(1,3),
-                 temp.at<double>(2,0),temp.at<double>(2,1),temp.at<double>(2,2),temp.at<double>(2,3));
+
+	P = ProjMat_1(Range(0,3),Range::all());
+	P1 = ProjMat_2(Range(0,3),Range::all());
+
+	temp = ProjMat_1.inv();
+	temp_1 = ProjMat_2.inv();
+	for (int j = 0; j < 3; ++j) {
+		proj_center_1(j) = temp.at<double>(j,3);
+		proj_center_2(j) = temp_1.at<double>(j,3);
+	}
 
 
 
 	vector<CloudPoint> pcloud,pcloud1; 
 	vector<KeyPoint> corresp;
 
-	double reproj_error1 = TriangulatePoints(imgpts1_good,imgpts2_good,K,Kinv,P,P1,pcloud,corresp,discoeff);
-	double reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,P,pcloud1,corresp,discoeff);
-    mean_reproj_err.push_back((reproj_error1+reproj_error2)/2);
+	double reproj_error1 = TriangulatePoints(matches,imgpts1_good,imgpts2_good,K,proj_center_1,proj_center_2,P,P1,pcloud,corresp,distcoeff,initial);
+	//double reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,P,pcloud1,corresp,discoeff);
+    mean_reproj_err.push_back(reproj_error1);
 	vector<uchar> tmp_status;
-/*
-	if (!TestTriangulation(pcloud,P1,tmp_status) || !TestTriangulation(pcloud1,ProjMat,tmp_status) || reproj_error1 > 100.0 || reproj_error2 > 100.0)
-	{
-				P1 = Matx34d(R1(0,0),	R1(0,1),	R1(0,2),	t2(0),
-							 R1(1,0),	R1(1,1),	R1(1,2),	t2(1),
-							 R1(2,0),	R1(2,1),	R1(2,2),	t2(2));
-				cout << "Testing P1 "<< endl << Mat(P1) << endl;
-
-				pcloud.clear(); pcloud1.clear(); corresp.clear();
-				reproj_error1 = TriangulatePoints(imgpts1_good,imgpts2_good,K,Kinv,ProjMat,P1,pcloud,corresp,discoeff);
-				reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,ProjMat,pcloud1,corresp,discoeff);
-				
-				if (!TestTriangulation(pcloud,P1,tmp_status) || !TestTriangulation(pcloud1,ProjMat,tmp_status) || reproj_error1 > 100.0 || reproj_error2 > 100.0) {
-
-					
-					P1 = Matx34d(R2(0,0),	R2(0,1),	R2(0,2),	t1(0),
-								 R2(1,0),	R2(1,1),	R2(1,2),	t1(1),
-								 R2(2,0),	R2(2,1),	R2(2,2),	t1(2));
-					//cout << "Testing P1 "<< endl << Mat(P1) << endl;
-
-					pcloud.clear(); pcloud1.clear(); corresp.clear();
-					reproj_error1 = TriangulatePoints(imgpts1_good,imgpts2_good,K,Kinv,ProjMat,P1,pcloud,corresp,discoeff);
-					reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,ProjMat,pcloud1,corresp,discoeff);
-					
-					if (!TestTriangulation(pcloud,P1,tmp_status) || !TestTriangulation(pcloud1,ProjMat,tmp_status) || reproj_error1 > 100.0 || reproj_error2 > 100.0) {
-						P1 = Matx34d(R2(0,0),	R2(0,1),	R2(0,2),	t2(0),
-									 R2(1,0),	R2(1,1),	R2(1,2),	t2(1),
-									 R2(2,0),	R2(2,1),	R2(2,2),	t2(2));
-						cout << "Testing P1 "<< endl << Mat(P1) << endl;
-
-						pcloud.clear(); pcloud1.clear(); corresp.clear();
-						reproj_error1 = TriangulatePoints(imgpts1_good,imgpts2_good,K,Kinv,ProjMat,P1,pcloud,corresp,discoeff);
-						reproj_error2 = TriangulatePoints(imgpts2_good,imgpts1_good,K,Kinv,P1,ProjMat,pcloud1,corresp,discoeff);
-						
-						if (!TestTriangulation(pcloud,P1,tmp_status) || !TestTriangulation(pcloud1,ProjMat,tmp_status) || reproj_error1 > 100.0 || reproj_error2 > 100.0) {
-							cout << "Err is too big." << endl; 
-							return false;
-						}
-					}				
-				}			
-    }*/
 			for (unsigned int i=0; i<pcloud.size(); i++) {
 				outCloud.push_back(pcloud[i]);
                 //kp_idx.insert(i);
