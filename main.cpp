@@ -338,9 +338,15 @@ int main( int argc, char** argv )
 
 
 
+            cout<<"pose_1的位姿： "<<ProjMat[i]<<endl;
+            cout<<"pose_2的位姿： "<<ProjMat[i+1]<<endl;
             FindCameraMatrices(v_K,v_Kinv,ProjMat[i],ProjMat[i+1],v_discoeff,good_matches[i],
                                imgpts_good[0],imgpts_good[1],pointcloud,each_mean_reproj_error,images_pair_is_initial);
-           // BundleAdjustment(imgpts_good[1],R,v_K,t,pointcloud);
+            cout<<"优化后point的位姿： "<<pointcloud[i].pt<<endl;
+          // BundleAdjustment(imgpts_good[0],imgpts_good[1],ProjMat[i],ProjMat[i+1],v_K,pointcloud);
+            cout<<"优化后pose_1的位姿： "<<ProjMat[i]<<endl;
+            cout<<"优化后pose_2的位姿： "<<ProjMat[i+1]<<endl;
+            cout<<"优化后point的位姿： "<<pointcloud[i].pt<<endl;
 
 
             int k = 0;
@@ -387,8 +393,7 @@ int main( int argc, char** argv )
                     {
                         if (
                              m.distance<mid_dist/4  //很有必要，如果去掉，重投影误差虽然小，但形状变了
-                            &&pointcloud[idx].reprojection_error<max_reproj_err/2&&
-                            pointcloud[idx].pt.z>0
+                            &&pointcloud[idx].reprojection_error<max_reproj_err/2
 
                                 )
                         {

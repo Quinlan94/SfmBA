@@ -35,7 +35,7 @@ enum FeatureExtract{
 namespace Eigen {
 
 	typedef Eigen::Matrix<double, 3, 4> Matrix3x4d;
-	typedef Eigen::Matrix<double,9,1> Vector9d;
+	typedef Eigen::Matrix<double,1,6> Vector6d;
 }
 typedef pcl::PointXYZRGB Point_PCL;
 typedef pcl::PointCloud<Point_PCL> PointCloud;
@@ -85,10 +85,10 @@ Scalar ReprojErrorAndPointCloud(vector<KeyPoint> &pt_set2, const Mat &K, const M
 								vector<CloudPoint> &pointcloud, const vector<Point3d> &points_3d,std::vector<cv::DMatch>& good_matches);
 
 
-double* CvMatrix2ArrayCamera( Mat R,Mat K,Mat t);
+double* CvMatrix2ArrayCamera( Mat R,Mat t);
 double* CvPoint3d2ArrayPoint( Point3d p);
-void BundleAdjustment(vector<KeyPoint> keypoints_2_depth,
-                      Mat &R, Mat& K,Mat& t,vector<CloudPoint> &pointcloud);
+void BundleAdjustment(vector<KeyPoint> keypoints_1_depth,vector<KeyPoint> keypoints_2_depth,
+                      Mat &Proj_1,Mat &Proj_2,Mat& K,vector<CloudPoint> &pointcloud);
 
 
 

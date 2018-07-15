@@ -124,15 +124,17 @@ Scalar ReprojErrorAndPointCloud(vector<KeyPoint> &pt_set2, const Mat &K, const M
             if(reprj_err<max_reproj_err)
             {
                 reproj_error.push_back(reprj_err);
+                CloudPoint cp;
+                cp.pt = Point3d(X(0), X(1), X(2));
+                cp.reprojection_error = reprj_err;
+                pointcloud.push_back(cp);
+                temp_matches.push_back(good_matches[i]);
+                temp_pt_set2.push_back(pt_set2[i]);
             }
-        CloudPoint cp;
-        cp.pt = Point3d(X(0), X(1), X(2));
-        cp.reprojection_error = reprj_err;
 
 
-        pointcloud.push_back(cp);
-        temp_matches.push_back(good_matches[i]);
-        temp_pt_set2.push_back(pt_set2[i]);
+
+
 
 
     }
@@ -163,8 +165,7 @@ Scalar ReprojErrorAndPointCloud(vector<KeyPoint> &pt_set2, const Mat &K, const M
         CloudPoint cp;
         cp.pt = Point3d(X(0), X(1), X(2));
         cp.reprojection_error = reprj_err;
-        if(reprj_err>5)
-            max_err_pointcloud.push_back(cp);
+
         pointcloud.push_back(cp);
 
     }
@@ -172,9 +173,9 @@ Scalar ReprojErrorAndPointCloud(vector<KeyPoint> &pt_set2, const Mat &K, const M
     cout << "Done. \n\r"<<pointcloud.size()<<"points, " <<"mean square reprojetion err = " << mse[0] <<  endl;
     return mse;
 }
-double* CvMatrix2ArrayCamera( Mat R,Mat K,Mat t)
+double* CvMatrix2ArrayCamera( Mat R,Mat t)
 {
-    double* camera = new double[9];
+    double* camera = new double[6];
     Mat_<double> r(3,1);
     if(R.cols==3&&R.rows==3)
         Rodrigues(R,r);
@@ -186,11 +187,9 @@ double* CvMatrix2ArrayCamera( Mat R,Mat K,Mat t)
     camera[3] = t.at<double>(0,0);
     camera[4] = t.at<double>(1,0);
     camera[5] = t.at<double>(2,0);
-    camera[6] = K.at<double>(0,0);
-    camera[7] = K.at<double>(0,2);
-    camera[8] = K.at<double>(1,2);
 
-    cout<<"相机参数： "<<camera<<endl;
+
+    cout<<"位姿参数： "<<camera<<endl;
     return camera;
 }
 
@@ -259,10 +258,26 @@ void SetLinearSolver(ceres::Solver::Options* options)
     options->num_linear_solver_threads =1;
 
 }
-void BundleAdjustment(vector<KeyPoint> keypoints_2_depth,
-                       Mat &R, Mat& K,Mat& t,vector<CloudPoint> &pointcloud)
+void BundleAdjustment(vector<KeyPoint> keypoints_1_depth,vector<KeyPoint> keypoints_2_depth,
+                      Mat &Proj_1,Mat &Proj_2,Mat& K,vector<CloudPoint> &pointcloud)
 {
-    double* camera = CvMatrix2ArrayCamera(R,K,t);
+    //double* pose_2 = CvMatrix2ArrayCamera(R,t);
+    Mat r_mat_1 = Proj_1(Range(0,3),Range(0,3));
+    Mat r_vec_1;
+    Rodrigues(r_mat_1,r_vec_1);
+    const Eigen::Vector3d r_vec_const(r_vec_1.at<double>(0),r_vec_1.at<double>(1),r_vec_1.at<double>(2));
+    const Eigen::Vector3d t_vec_const(Proj_1.at<double>(0,3),Proj_1.at<double>(1,3),Proj_1.at<double>(2,3));
+    const Eigen::Vector3d camera_param(K.at<double>(0,0),K.at<double>(0,2),K.at<double>(1,2));
+
+    Mat r_mat_2 = Proj_2(Range(0,3),Range(0,3));
+    Mat t_vec_2;
+    t_vec_2 = Proj_2.col(3);
+    double* pose_2 = CvMatrix2ArrayCamera(r_mat_2,t_vec_2);
+
+
+
+
+
     //std::cout<<"camera value: "<<*camera<<" "<<*(camera+1)<<" "<<*(camera+2)<<endl;
     double* points = new double[3*pointcloud.size()];
     double* points_temp = points;
@@ -273,26 +288,29 @@ void BundleAdjustment(vector<KeyPoint> keypoints_2_depth,
         points[3*j+2] = pointcloud[j].pt.z;
 
     }
-    double *observe = new double[keypoints_2_depth.size()*2];
-    double *observe_temp = observe;
+    double *observe_2 = new double[keypoints_2_depth.size()*2];
+   /* double *observe_temp = observe;
     for (int k = 0; k < keypoints_2_depth.size(); ++k) {
         *observe_temp = keypoints_2_depth[k].pt.x;
         observe_temp++;
         *observe_temp = keypoints_2_depth[k].pt.y;
         observe_temp++;
 
-    }
+    }*/
     Problem problem;
 
     for (int i = 0; i < keypoints_2_depth.size(); ++i)
     {
+        Eigen::Vector2d observe_point_1(keypoints_1_depth[i].pt.x,keypoints_1_depth[i].pt.y);
+        Eigen::Vector2d observe_point_2(keypoints_2_depth[i].pt.x,keypoints_2_depth[i].pt.y);
         CostFunction* cost_function;
-        cost_function = SnavelyReprojectionError::Create(observe[2*i+0],observe[2*i+1]);
+        cost_function = SnavelyReprojectionError::Create(observe_point_1,observe_point_2,
+                                                         r_vec_const,t_vec_const,camera_param);
         LossFunction* loss_function =  new HuberLoss(1.0);
 
         double *point =points+3*i;
 
-        problem.AddResidualBlock(cost_function, loss_function, camera, point);
+        problem.AddResidualBlock(cost_function, loss_function, pose_2, point);
 
 
 
@@ -303,28 +321,28 @@ void BundleAdjustment(vector<KeyPoint> keypoints_2_depth,
     SetLinearSolver(&options);
    // SetOrdering(camera,points,1,pointcloud.size(),&options);
 
-    options.gradient_tolerance = 1;
-    options.function_tolerance = 0;
+    options.gradient_tolerance = 1e-16;
+    options.function_tolerance = 1e-16;
     Solver::Summary summary;
     ceres::Solve(options, &problem, &summary);
     std::cout << summary.FullReport() << "\n";
 
     Mat_<double> r_temp(3,1),t_temp(3,1);
-    r_temp<<camera[0],camera[1],camera[2];
-    Rodrigues(r_temp,R);
-    cout<<"R : "<<R<<endl;
-    t_temp<<camera[3],camera[4],camera[5];
-    t = t_temp;
-    cout<<"t : "<<t<<endl;
+    r_temp<<pose_2[0],pose_2[1],pose_2[2];
+    Rodrigues(r_temp,r_mat_2);
+    cout<<"R : "<<r_mat_2<<endl;
+    t_temp<<pose_2[3],pose_2[4],pose_2[5];
+
+    cout<<"t : "<<t_temp<<endl;
     Mat P1;
-    P1 = (Mat_<double>(3,4)<<R.at<double>(0,0),	R.at<double>(0,1),	R.at<double>(0,2),	t.at<double>(0),
-            R.at<double>(1,0),	R.at<double>(1,1),	R.at<double>(1,2),	t.at<double>(1),
-            R.at<double>(2,0),	R.at<double>(2,1),	R.at<double>(2,2),	t.at<double>(2));
-    K.at<double>(0,0)= camera[6];
-    K.at<double>(1,1)= camera[6];
-    K.at<double>(0,2)= camera[7];
-    K.at<double>(1,2)= camera[8];
-    cout<<"K: "<<K<<endl;
+
+    Proj_2 = (Mat_<double>(4,4)<<r_mat_2.at<double>(0,0),	r_mat_2.at<double>(0,1),	r_mat_2.at<double>(0,2),	t_temp.at<double>(0),
+            r_mat_2.at<double>(1,0),	r_mat_2.at<double>(1,1),	r_mat_2.at<double>(1,2),	t_temp.at<double>(1),
+            r_mat_2.at<double>(2,0),	r_mat_2.at<double>(2,1),	r_mat_2.at<double>(2,2),	t_temp.at<double>(2),
+            0,0,0,1);
+    P1 = Proj_2(Range(0,3),Range::all());
+
+
     vector<Point3d> points_3d;
     for (int m = 0; m <pointcloud.size(); ++m) {
         Point3d p;
@@ -341,19 +359,14 @@ void BundleAdjustment(vector<KeyPoint> keypoints_2_depth,
 
 
 
-
-
-
-
-
-
     std::cout<<"point value: "<<*points<<" "<<*(points+1)<<" "<<*(points+2)<<endl;
-    std::cout<<"camera value: "<<*camera<<" "<<*(camera+1)<<" "<<*(camera+2)<<endl;
+
 
 
 
     delete points;
-    delete camera;
+    delete pose_2;
+
 }
 
 
