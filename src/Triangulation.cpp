@@ -156,19 +156,18 @@ double TriangulatePoints(std::vector<cv::DMatch>& matches,
         );
         Eigen::Vector3d xyz = CvPointToVector3d(p);
         double angle = CalculateTriangulationAngle(proj_center_1, proj_center_2, xyz);
-        if (RadToDeg(angle) >= min_angle &&
+        if (
+                RadToDeg(angle) >= min_angle &&
                 HasPointPositiveDepth(proj_matrix_1, xyz) &&
                 HasPointPositiveDepth(proj_matrix_2, xyz))
         {
             points_3d.push_back(p);
             temp_matches.push_back(matches[i]);
-            temp_pt_set1.push_back(pt_set1[i]);
             temp_pt_set2.push_back(pt_set2[i]);
         }
 
     }
         matches = temp_matches;
-        pt_set1 = temp_pt_set1;
         pt_set2 = temp_pt_set2;
         cout << "三角测量点： " << points_3d.size() << endl;
 

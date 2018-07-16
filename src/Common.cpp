@@ -3,12 +3,12 @@
 
 #include "Common.h"
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+//#include <opencv2/imgproc/imgproc.hpp>
 
 #include "ceres/ceres.h"
 #include "SnavelyReprojectionError.h"
 
-#include <iostream>
+//#include <iostream>
 
 
 
@@ -129,17 +129,12 @@ Scalar ReprojErrorAndPointCloud(vector<KeyPoint> &pt_set2, const Mat &K, const M
                 cp.reprojection_error = reprj_err;
                 pointcloud.push_back(cp);
                 temp_matches.push_back(good_matches[i]);
-                temp_pt_set2.push_back(pt_set2[i]);
+
             }
-
-
-
-
-
 
     }
     good_matches = temp_matches;
-    pt_set2 = temp_pt_set2;
+
     Scalar mse = mean(reproj_error);
     cout << "Done. \n\r"<<pointcloud.size()<<"points, " <<"mean square reprojetion err = " << mse[0] <<  endl;
     return mse;
@@ -238,9 +233,9 @@ void SetOrdering( double* cameras ,double * points,const int num_cameras,const i
 
 }
 void SetMinimizerOptions(Solver::Options* options){
-    options->max_num_iterations = 100;
+    options->max_num_iterations = 150;
     options->minimizer_progress_to_stdout = true;
-    options->num_threads = 1;
+    options->num_threads = 2;
 
 
     options->trust_region_strategy_type = LEVENBERG_MARQUARDT;
@@ -255,7 +250,7 @@ void SetLinearSolver(ceres::Solver::Options* options)
     options->dense_linear_algebra_library_type = ceres::EIGEN;
 
 
-    options->num_linear_solver_threads =1;
+    options->num_linear_solver_threads =2;
 
 }
 void BundleAdjustment(vector<KeyPoint> keypoints_1_depth,vector<KeyPoint> keypoints_2_depth,
@@ -274,11 +269,6 @@ void BundleAdjustment(vector<KeyPoint> keypoints_1_depth,vector<KeyPoint> keypoi
     t_vec_2 = Proj_2.col(3);
     double* pose_2 = CvMatrix2ArrayCamera(r_mat_2,t_vec_2);
 
-
-
-
-
-    //std::cout<<"camera value: "<<*camera<<" "<<*(camera+1)<<" "<<*(camera+2)<<endl;
     double* points = new double[3*pointcloud.size()];
     double* points_temp = points;
     for (int j = 0; j < pointcloud.size(); ++j)
@@ -327,13 +317,14 @@ void BundleAdjustment(vector<KeyPoint> keypoints_1_depth,vector<KeyPoint> keypoi
     ceres::Solve(options, &problem, &summary);
     std::cout << summary.FullReport() << "\n";
 
+
+
     Mat_<double> r_temp(3,1),t_temp(3,1);
     r_temp<<pose_2[0],pose_2[1],pose_2[2];
     Rodrigues(r_temp,r_mat_2);
-    cout<<"R : "<<r_mat_2<<endl;
+
     t_temp<<pose_2[3],pose_2[4],pose_2[5];
 
-    cout<<"t : "<<t_temp<<endl;
     Mat P1;
 
     Proj_2 = (Mat_<double>(4,4)<<r_mat_2.at<double>(0,0),	r_mat_2.at<double>(0,1),	r_mat_2.at<double>(0,2),	t_temp.at<double>(0),
@@ -359,7 +350,6 @@ void BundleAdjustment(vector<KeyPoint> keypoints_1_depth,vector<KeyPoint> keypoi
 
 
 
-    std::cout<<"point value: "<<*points<<" "<<*(points+1)<<" "<<*(points+2)<<endl;
 
 
 

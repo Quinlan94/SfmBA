@@ -105,7 +105,7 @@ bool getGoodMatches(vector<DMatch> &v_matches, vector<DMatch> &good_matches,doub
     double  cutoff;
     if(orb == 0)
     {
-        cutoff = 15*min_dist;
+        cutoff = 10*min_dist;
     } else
     {
         cutoff = 2.5*min_dist;
@@ -116,7 +116,7 @@ bool getGoodMatches(vector<DMatch> &v_matches, vector<DMatch> &good_matches,doub
     for(unsigned int i = 0; i < v_matches.size(); i++ )
     {
 
-        if(v_matches[i].distance > 0.0&&v_matches[i].distance < 15*min_dist)
+        if(v_matches[i].distance > 0.0&&v_matches[i].distance < 10*min_dist)
         {
             //如果一个描述符在train中只出现一次，说明它没有其他的重匹配，
             if (existing_trainIdx.find(v_matches[i].trainIdx) == existing_trainIdx.end() &&

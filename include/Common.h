@@ -4,11 +4,10 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
-#include <opencv2/core/core.hpp>
+
 
 #include <opencv2/calib3d/calib3d.hpp>
 
-#include <opencv2/imgproc/imgproc.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
 

@@ -3,16 +3,7 @@
 
 //pcl的库头文件放在最上面，不然会出现莫名奇妙的错误
 
-#include <opencv2/xfeatures2d.hpp>
-#include <opencv2/xfeatures2d/nonfree.hpp>
-
-
-#include <stdio.h>
-
-
-#include "opencv2/features2d/features2d.hpp"
-
-#include <opencv2/calib3d/calib3d.hpp>
+//#include <stdio.h>
 
 
 
@@ -20,7 +11,7 @@
 #include <boost/format.hpp>
 
 
-#include "FeatureMatching.h"
+//#include "FeatureMatching.h"
 #include "CalculateCameraMatrix.h"
 #include "Triangulation.h"
 #include "Common.h"
@@ -28,7 +19,7 @@
 #include <ArcBall.h>
 
 #include <string>
-#include <stdlib.h>
+
 
 //#include <GL/glut.h>
 //#include <GL/gl.h>
@@ -338,15 +329,23 @@ int main( int argc, char** argv )
 
 
 
-            cout<<"pose_1的位姿： "<<ProjMat[i]<<endl;
-            cout<<"pose_2的位姿： "<<ProjMat[i+1]<<endl;
+
             FindCameraMatrices(v_K,v_Kinv,ProjMat[i],ProjMat[i+1],v_discoeff,good_matches[i],
                                imgpts_good[0],imgpts_good[1],pointcloud,each_mean_reproj_error,images_pair_is_initial);
-            cout<<"优化后point的位姿： "<<pointcloud[i].pt<<endl;
-          // BundleAdjustment(imgpts_good[0],imgpts_good[1],ProjMat[i],ProjMat[i+1],v_K,pointcloud);
-            cout<<"优化后pose_1的位姿： "<<ProjMat[i]<<endl;
-            cout<<"优化后pose_2的位姿： "<<ProjMat[i+1]<<endl;
-            cout<<"优化后point的位姿： "<<pointcloud[i].pt<<endl;
+            imgpts_good[0].clear();
+            imgpts_good[1].clear();
+            for (int l = 0; l <good_matches[i].size(); ++l) {
+                imgpts_good[0].push_back(keypoints[0][good_matches[i][l].queryIdx]);
+                imgpts_good[1].push_back(keypoints[1][good_matches[i][l].trainIdx]);
+            }
+
+          BundleAdjustment(imgpts_good[0],imgpts_good[1],ProjMat[i],ProjMat[i+1],v_K,pointcloud);
+
+            Mat r0 =  ProjMat[i+1](Range(0,3),Range(0,3));
+            Mat rotation = r0.t()*r0;
+           /* cout<<"优化后旋转： "<<rotation<<endl;
+            cout<<"优化后行列式： "<<determinant(r0)<<endl;*/
+
 
 
             int k = 0;
@@ -392,8 +391,8 @@ int main( int argc, char** argv )
                     if (m.queryIdx == b.trainIdx)
                     {
                         if (
-                             m.distance<mid_dist/4  //很有必要，如果去掉，重投影误差虽然小，但形状变了
-                            &&pointcloud[idx].reprojection_error<max_reproj_err/2
+                             m.distance<mid_dist/2  //很有必要，如果去掉，重投影误差虽然小，但形状变了
+                            &&pointcloud[idx].reprojection_error<max_reproj_err/1.5
 
                                 )
                         {
@@ -448,7 +447,7 @@ int main( int argc, char** argv )
             Mat r;
             Mat_<double> R(3,3);
             Mat_<double> t(3,1);
-            solvePnP( pts_3d, pts_2d, v_K, Mat(), r, t, false);//筛选后的点是否效果明显,很奇怪。
+            solvePnPRansac( pts_3d, pts_2d, v_K, Mat(), r, t, false);//筛选后的点是否效果明显,很奇怪。
 
             cv::Rodrigues ( r, R );//旋转向量是个3维，那旋转角度呢，模是弧度
 
@@ -465,27 +464,20 @@ int main( int argc, char** argv )
                     0,        0,      0,      1);
 
 
-            Mat_<double> Pose_R,Pose_t;
-            Pose_R = (Mat_<double>(3,3)<<ProjMat[i+1].at<double>(0,0),ProjMat[i+1].at<double>(0,1),ProjMat[i+1].at<double>(0,2),
-                    ProjMat[i+1].at<double>(1,0),ProjMat[i+1].at<double>(1,1),ProjMat[i+1].at<double>(1,2),
-                    ProjMat[i+1].at<double>(2,0),ProjMat[i+1].at<double>(2,1),ProjMat[i+1].at<double>(2,2));
-            Pose_t = (Mat_<double>(3,1)<<ProjMat[i+1].at<double>(0,3),
-                    ProjMat[i+1].at<double>(1,3),
-                    ProjMat[i+1].at<double>(2,3));
-
 
             FindCameraMatrices(v_K,v_Kinv,ProjMat[i],ProjMat[i+1],v_discoeff,good_matches[i],
                                imgpts_good[0],imgpts_good[1],pointcloud,each_mean_reproj_error,images_pair_is_initial);
-           /* BundleAdjustment(imgpts_good[1],Pose_R,v_K,Pose_t,pointcloud);
-            ProjMat[i+1] = (Mat_<double>(4,4)<<Pose_R(0,0),	Pose_R(0,1),	Pose_R(0,2),	Pose_t(0),
-                    Pose_R(1,0),	Pose_R(1,1),	Pose_R(1,2),	Pose_t(1),
-                    Pose_R(2,0),	Pose_R(2,1),	Pose_R(2,2),	Pose_t(2),
-                    0,        0,      0,      1);
-*/
-            Mat rotation = Pose_R.t()*Pose_R;
+            imgpts_good[0].clear();
+            imgpts_good[1].clear();
+            for (int l = 0; l <good_matches[i].size(); ++l) {
+                imgpts_good[0].push_back(keypoints[i][good_matches[i][l].queryIdx]);
+                imgpts_good[1].push_back(keypoints[i+1][good_matches[i][l].trainIdx]);
+            }
 
-            double n = determinant(rotation);
-            cout<<"单位矩阵: "<<rotation<<"行列式："<< n<<endl;
+            BundleAdjustment(imgpts_good[0],imgpts_good[1],ProjMat[i],ProjMat[i+1],v_K,pointcloud);
+
+
+
             int k = 0;
            /* vector<int> pre,current,differ;
             vector<int>::iterator f;
@@ -558,7 +550,7 @@ int main( int argc, char** argv )
             Mat temp_center;
             for(int j=0;j<pointcloud.size();j++ )
             {
-                //if(pointcloud[j].pt.z>=0&&pointcloud[j].pt.z<=100)
+                if(pointcloud[j].reprojection_error<max_reproj_err)
                 {
                     Point_PCL p;
                     Point3d p_cv;
